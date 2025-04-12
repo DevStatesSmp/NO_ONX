@@ -47,4 +47,3 @@ Line 2: i love u :heart:
 ```
 
 More commands and feature will be added in future, stay tuned!
-# NO_ONX
