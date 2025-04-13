@@ -13,7 +13,7 @@ sudo apt install python3 g++
 ```
 
 ### Install required libary
-(Note: If you're using Kali Linux, you can skip this step)␣␣
+(Note: If you're using Kali Linux, you can skip this step)<br>
 For python:
 ```bash
 pip install -r python_requirements.txt
@@ -32,7 +32,7 @@ python noonx.py
 
 Some example command you can use like:
 
-python readfile.py - Read file content␣␣
+python readfile.py - Read file content<br>
 python detective.py - Monitor and detect suspecious activity on the system
 
 Example:
