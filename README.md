@@ -32,7 +32,7 @@ python noonx.py
 
 Some example command you can use like:
 
-python readfile.py - Read file content
+python readfile.py - Read file content\n
 python detective.py - Monitor and detect suspecious activity on the system
 
 Example:
