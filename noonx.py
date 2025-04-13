@@ -16,8 +16,7 @@ max_line_length = max(len(line) for line in banner_lines)
 for line in banner_lines:
     print(line)
 
-# In version nhỏ ở góc phải banner
-version_str = "v0.0.5 beta" 
+version_str = "v0.1.2 beta" 
 space_to_right = max_line_length - len(version_str)
 print(" " * space_to_right + version_str + "\n")
 
@@ -44,12 +43,5 @@ def get_system_info():
     print(f"🖼️  GPU: {get_gpu_info()}")
     print(f"🔍 Distro ID: {distro.id()}, Version: {distro.version()}\n")
     
-# Command
-def command():
-    print("📌 Some example command\n")
-    print("readfile.py - Read file content")
-    print("detective.py - Monitor and detect suspecious activity")
-    print("malware_scan.py - Scan suspect file")
-    print("network_scan.py - Scan suspect network")
 get_system_info()
-command()
+print("use python help.py to look out some commands")
