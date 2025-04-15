@@ -1,10 +1,11 @@
 import pyfiglet
-import platform
-import psutil
-import distro
-import os
 import subprocess
 import shutil
+import sys
+import distro
+import psutil
+import platform
+import os
 
 term_width = shutil.get_terminal_size().columns
 
@@ -19,8 +20,32 @@ for line in banner_lines:
 version_str = "v0.1.2 beta" 
 space_to_right = max_line_length - len(version_str)
 print(" " * space_to_right + version_str + "\n")
+print("📖 Usage: python3 <module_name>.py or python3 noonx.py <command>\n")
 
+### ==== Command info ====
 
+def show_help():
+    print("""
+usage:
+    1. python3 noonx.py <command>
+    or
+    2. python3 [FILE_MODULE_NAME].py
+
+Available module:
+    detective      - Monitor file & system changes
+    readfile       - Read file content
+    
+Scanning module:
+    network_scan    - Scan ports or network issues
+    file_scan       - Scan files for threats
+    malware_scan    - Malware signature scanner
+
+Option:
+    --help (-h)          - Show help
+    --system_info (-si)  - Check system infomation
+""")
+
+### ==== System info ====
 def get_gpu_info():
     try:
         with os.popen("lspci | grep VGA") as f:
@@ -28,10 +53,7 @@ def get_gpu_info():
     except Exception as e:
         return f"Could not retrieve GPU info: {e}"
 
-# System Information Output
 def get_system_info():
-    print("📌 NO_ONX - Analytical, investigattion, security monitoring for Linux System\n")
-    
     # System
     print("\033[1mYour hardware system\033[0m\n")
     print(f"🖥️  OS: {distro.name(pretty=True)}")
@@ -43,5 +65,22 @@ def get_system_info():
     print(f"🖼️  GPU: {get_gpu_info()}")
     print(f"🔍 Distro ID: {distro.id()}, Version: {distro.version()}\n")
     
-get_system_info()
-print("use python help.py to look out some commands")
+    
+
+def main():
+    if len(sys.argv) == 2:
+        arg = sys.argv[1]
+        if arg in ('--help', '-h'):
+            show_help()
+            return
+        elif arg in ('--system_info', '--si'):
+            get_system_info()
+            return
+        else:
+            print(f"[!] Unknown command: {arg}")
+            print("Run with --help for available commands.")
+            return
+    
+main()
+print("Use --help for more commands")
+
