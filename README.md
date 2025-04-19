@@ -16,7 +16,7 @@ For Ubuntu and Debian:
 ```bash
 sudo apt update
 sudo apt install python3 g++
-``` <br>
+```
 
 For Arch Linux:
 ```bash
@@ -29,7 +29,9 @@ sudo pacman -S python python-pip gcc base-devel openssl
 For python:
 ```bash
 pip install -r python_requirements.txt
-or if you using Arch:
+
+If using Arch:
+```bash
 sudo pacman -S python-psutil python-pyfiglet python-distro
 ```
 and C++:
