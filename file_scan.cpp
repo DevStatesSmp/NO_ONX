@@ -6,16 +6,22 @@
 #include <openssl/md5.h>
 #include <filesystem>
 #include <vector>
+#include <unordered_set>
+#include <thread>
+#include <mutex>
+#include <future>
 
 namespace fs = std::filesystem;
 
-std::vector<std::string> KNOWN_MALWARE_HASHES = {
+std::unordered_set<std::string> KNOWN_MALWARE_HASHES = {
     "d41d8cd98f00b204e9800998ecf8427e", 
     "e99a18c428cb38d5f260853678922e03"   
 };
 
 std::vector<std::string> safe_files;
 std::vector<std::string> infected_files;
+std::mutex safe_files_mutex;
+std::mutex infected_files_mutex;
 
 std::string get_file_hash(const std::string& file_path, const std::string& hash_type = "sha256") {
     unsigned char buffer[8192];
@@ -27,7 +33,7 @@ std::string get_file_hash(const std::string& file_path, const std::string& hash_
         return "";
     }
 
-    // Tính toán hash
+    // Hash calculation
     if (hash_type == "sha256") {
         SHA256_CTX sha256_ctx;
         SHA256_Init(&sha256_ctx);
@@ -43,11 +49,11 @@ std::string get_file_hash(const std::string& file_path, const std::string& hash_
         }
         MD5_Final(hash, &md5_ctx);
     } else {
-        std::cerr << "Not support this hash" << std::endl;
+        std::cerr << "Unsupported hash type: " << hash_type << std::endl;
         return "";
     }
 
-    // Chuyển đổi hash thành chuỗi hex
+    // Convert hash to hex string
     std::ostringstream hex_stream;
     for (int i = 0; i < (hash_type == "sha256" ? SHA256_DIGEST_LENGTH : MD5_DIGEST_LENGTH); i++) {
         hex_stream << std::setw(2) << std::setfill('0') << std::hex << (int)hash[i];
@@ -62,19 +68,17 @@ void scan_file(const std::string& path) {
 
         if (file_hash.empty()) return;
 
-        bool infected = false;
-        for (const auto& malware_hash : KNOWN_MALWARE_HASHES) {
-            if (file_hash == malware_hash) {
-                std::cout << "❌ WARNING: " << path << " contains malware (hash matched)\n";
-                infected_files.push_back(path);
-                infected = true;
-                break;
-            }
-        }
-
-        if (!infected) {
-            std::cout << "✅ Safe: " << path << "\n";
+        bool infected = KNOWN_MALWARE_HASHES.find(file_hash) != KNOWN_MALWARE_HASHES.end();
+        
+        // Lock mutexes for thread-safe access
+        if (infected) {
+            std::lock_guard<std::mutex> lock(infected_files_mutex);
+            infected_files.push_back(path);
+            std::cout << "❌ WARNING: " << path << " contains malware (hash matched)\n";
+        } else {
+            std::lock_guard<std::mutex> lock(safe_files_mutex);
             safe_files.push_back(path);
+            std::cout << "✅ Safe: " << path << "\n";
         }
 
     } else if (fs::is_directory(path)) {
@@ -86,15 +90,30 @@ void scan_file(const std::string& path) {
     }
 }
 
+void scan_directory(const std::string& path) {
+    std::vector<std::future<void>> futures;
+
+    // Use multithreading to scan files concurrently
+    for (const auto& entry : fs::directory_iterator(path)) {
+        futures.push_back(std::async(std::launch::async, scan_file, entry.path().string()));
+    }
+
+    // Wait for all threads to finish
+    for (auto& future : futures) {
+        future.get();
+    }
+}
+
 int main() {
     std::string directory_to_scan;
     std::getline(std::cin, directory_to_scan);
     
     std::cout << "\n--- Starting scan ---\n\n";
-    scan_file(directory_to_scan);
+    scan_directory(directory_to_scan);
 
     std::cout << "\n--- Scan Results ---\n";
 
+    // Print infected files
     std::cout << "\n❌ Infected files:\n";
     if (infected_files.empty()) {
         std::cout << "  -> No malware found.\n";
@@ -104,6 +123,7 @@ int main() {
         }
     }
 
+    // Print safe files
     std::cout << "\n✅ Safe files:\n";
     if (safe_files.empty()) {
         std::cout << "  -> No safe files found.\n";
