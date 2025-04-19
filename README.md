@@ -29,11 +29,13 @@ sudo pacman -S python python-pip gcc base-devel openssl
 For python:
 ```bash
 pip install -r python_requirements.txt
+```
 
 If using Arch:
 ```bash
 sudo pacman -S python-psutil python-pyfiglet python-distro
 ```
+
 and C++:
 ```bash
 sudo apt install build-essential libssl-dev
