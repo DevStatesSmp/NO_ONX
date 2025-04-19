@@ -6,15 +6,22 @@
 # NO_ONX
 NO_ONX is a lightweight tool but useful to analysis, investigattion, security monitoring for Linux System
 ## Requirement
-- OS: Linux (Ubuntu, Debian)
+- OS: Linux (Ubuntu, Debian, Arch Linux)
 - Python: 3.1x
 - C++17 and C++ Compiler (`g++`)
 
 ## Installation
-### Installing Python and C++ (Skip this if you have)
+### Installing Python and C++ (Skip this if you have)<br>
+For Ubuntu and Debian:
 ```bash
 sudo apt update
 sudo apt install python3 g++
+```
+<br>
+For Arch Linux:
+```bash
+sudo pacman -Sy
+sudo pacman -S python python-pip gcc base-devel openssl
 ```
 
 ### Install required libary
@@ -22,6 +29,8 @@ sudo apt install python3 g++
 For python:
 ```bash
 pip install -r python_requirements.txt
+or if you using Arch:
+sudo pacman -S python-psutil python-pyfiglet python-distro
 ```
 and C++:
 ```bash
