@@ -16,8 +16,8 @@ For Ubuntu and Debian:
 ```bash
 sudo apt update
 sudo apt install python3 g++
-```
-<br>
+``` <br>
+
 For Arch Linux:
 ```bash
 sudo pacman -Sy
