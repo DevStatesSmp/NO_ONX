@@ -1,23 +1,18 @@
 # THIS IS MODULE, DO NOT RUN THIS FILE DIRECTLY
 
-import psutil
-import os
-import time
-import platform
 import sys
-import pyfiglet
-import shutil
 
 # Import source
 ## Workload
-from .workload.help_module import help
-from .workload.system_info_module import get_system_info, get_gpu_info
+from .utils.help_module import help
+from .utils.system_info_module import get_system_info, get_gpu_info
+from .utils.banner_module import banner, version
+from .utils.loading_effect import loading_effect
+from .workload.compare_module import deep_compare_dirs, simple_compare_dirs
+from .workload.modification_module import mod
 from .workload.file_info_module import info, check_permission, hidden_file_info
-from .workload.banner_module import banner, version
-from .workload.loading_effect import loading_effect
-from .workload.compare_module import deep_compare_files, simple_compare_files
+from .workload.backup_module import *
 # Other
-from .modification import mod
 from . import file_scan
 from .readfile import *
     
@@ -149,21 +144,80 @@ def main():
             file_scan.scan_directory(path, algo)
             file_scan.print_results()
 
-        # Compare (use python src/compare.py instead)
+        # Compare
+        elif arg == '--compare --mode' and len(sys.argv) >= 5:
+            compare_type = sys.argv[2]
+            path1 = sys.argv[3]
+            path2 = sys.argv[4]
+    
+            if compare_type == 'deep':
+                loading_effect(f"Deep comparing {path1} and {path2}")
+                identical_files, different_files, only_in_dir1, only_in_dir2, diff_files, table_data = deep_compare_dirs(path1, path2)
+                print(f"Identical files: {identical_files}")
+                print(f"Different files: {different_files}")
+                if only_in_dir1:
+                    print(f"Only in {path1}: {only_in_dir1}")
+                if only_in_dir2:
+                    print(f"Only in {path2}: {only_in_dir2}")
+                if diff_files:
+                    print(f"Different files: {diff_files}")
 
-        # elif arg in ('--compare') and len(sys.argv) >= 4:
-        #     compare_type = sys.argv[2]
-        #     path1 = sys.argv[2]
-        #     path2 = sys.argv[3]
-        #     if compare_type == 'deep':
-        #         loading_effect(f"Deep comparing {path1} and {path2}")
-        #         deep_compare_files(path1, path2)
-        #     elif compare_type == 'simple':
-        #         loading_effect(f"Simple comparing {path1} and {path2}")
-        #         simple_compare_files(path1, path2)
-        #     else:
-        #         print("Error: Invalid compare type. Use 'deep' or 'simple'.", file=sys.stderr)
+                for row in table_data:
+                    print(f"{row[0]}: {row[1]} - {row[2]}")
         
+            elif compare_type == 'simple':
+                loading_effect(f"Simple comparing {path1} and {path2}")
+
+                result = simple_compare_dirs(path1, path2)
+                if result:
+                    for res in result:
+                        print(res)
+                else:
+                    print("No differences found.")
+            else:
+                print("Error: Invalid compare type. Use 'deep' or 'simple'.", file=sys.stderr)
+
+        # Backup
+        elif arg == '--backup':
+            backup_type = sys.argv[2]
+            path1 = sys.argv[3] if len(sys.argv) > 3 else None # Default path
+            path2 = sys.argv[4] if len(sys.argv) > 4 else None  # Second path (If have)
+
+            if backup_type == '-backup_file':
+                loading_effect(f"Backing up {path1}")
+                backup_file(path1)
+            elif backup_type == '-backup_restore_file':
+                if not path1 or not path2:
+                    print("Error: Both backup file path and restore location are required.")
+                else:
+                    loading_effect(f"Restoring {path1} to {path2}")
+                    restore_backup(path1, path2)
+
+            elif backup_type == '-backup_dir':
+                loading_effect(f"Backing up {path1}")
+                backup_directory(path1)
+            elif backup_type == '-backup_restore_dir':
+                loading_effect(f"Restoring {path1}")
+                restore_directory(path1)
+
+            elif backup_type == '-backup_file_timestamp':
+                loading_effect(f"Backing up {path1} with timestamp")
+                backup_file_with_timestamp(path1)
+
+            elif backup_type == '-backup_multiple_files':
+                loading_effect(f"Backing up multiple files: {path1} and {path2}")
+                backup_multiple_files(path1, path2)
+
+            elif backup_type == '-backup_multiple_directory':
+                loading_effect(f"Restoring multiple files: {path1} and {path2}")
+                backup_multiple_files(path1, path2)
+
+            elif backup_type == '-clean_old_backups':
+                loading_effect(f"Cleanup old backups older than 30 days...")
+                clean_old_backups(days=30)
+
+            else:
+                print("Error: Invalid backup type. Use 'backup_file', 'backup_dir', 'backup_file_timestamp', 'backup_multiple_files', 'backup_multiple_directory', or 'clean_old_backups'.", file=sys.stderr)
 
         else:
             print(f"\033[91m[!] Unknown or incomplete command:\033[0m {' '.join(sys.argv[1:])}")

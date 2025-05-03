@@ -32,12 +32,12 @@ NOONX_COMMANDS = [
     "--modify_file_name", "--modify_file_metadata",
     "--modify_file_line", "--modify_file_symlink",
     "--modify_directory", "--modify_directory_permissions",
-    "--modify_file_owner"
+    "--modify_file_owner", "--compare --mode", "--backup"
 ]
 
 
 def get_prompt():
-    return f"┌──({username}㉿{hostname})-(NO_ONX v0.2.4 Beta)\n└─$ "
+    return f"┌──({username}㉿{hostname})-(NO_ONX v0.2.8 Beta)\n└─$ "
 
 def no_onx_shell():
     subprocess.run("python noonx.py", shell=True)
@@ -71,7 +71,12 @@ def no_onx_shell():
                     print(f"[ERROR] Unsupported nnx command: {cmd}, use 'nnx --help' for more information.")
 
             else:
-                subprocess.run(cmd, shell=True)
+                completed = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+                if completed.returncode != 0 and "' is not recognized as" in completed.stderr:
+                    print(f"[ERROR] Unsupported nnx command: {cmd}, use 'nnx --help' for more information.\n")
+                else:
+                    print(completed.stdout, end="")
+                    print(completed.stderr, end="")
 
         except KeyboardInterrupt:
             print("\nUse 'exit' to quit.")
