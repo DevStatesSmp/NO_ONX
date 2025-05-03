@@ -1,5 +1,5 @@
 # Changelog
-> 🪟 Since **v0.2.4**, NO_ONX officially supports **Windows only**. Linux support has been **discontinued**.
+> 🪟 Since **v0.2.4 Beta**, NO_ONX officially supports **Windows only**. Linux support has been **discontinued**.
 
 ---
 
