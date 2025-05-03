@@ -1,7 +1,7 @@
 ![have background](https://github.com/user-attachments/assets/0deb4708-e3a9-4219-85e4-3072af962c90)
 (This is invincible title card, btw for fun)<br>
 
-[CHANGELOG](https://github.com/DevStatesSmp/NO_ONX/blob/NO_ONX/CHANGELOG.md)
+[CHANGELOG](https://github.com/DevStatesSmp/NO_ONX/blob/main/CHANGELOG.md)
 
 # NO_ONX
 NO_ONX is a lightweight tool but useful to analysis, investigattion, security monitoring for Window
