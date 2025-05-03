@@ -2,6 +2,15 @@
 > 🪟 Since **v0.2.4 Beta**, NO_ONX officially supports **Windows only**. Linux support has been **discontinued**.
 
 ---
+## [v0.2.8 Beta] - 2025-05-03
+### Added
+- Add Backup, Compare command
+- Add Documents folder
+
+### Fixed
+- Fix modification commands
+- Improve stability
+- Fix some bugs
 
 ## [v0.2.4 Beta] - 2025-05-02
 ### Added
