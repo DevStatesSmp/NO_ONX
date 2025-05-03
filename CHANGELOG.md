@@ -26,7 +26,7 @@
 
 ---
 
-## [v0.1.2 Beta] - 2025-04-14
+## [v0.1.2 Beta] - 2025-04-14 (Old Repository)
 ### Added
 - Several commands from `NO_ONX::modify` module.
 
@@ -48,3 +48,4 @@
 - Initial implementation of `readfile` and `detective` commands.
 
 ---
+[Visit old repository here](https://github.com/DevStatesSmp/NO_ONX-old)
