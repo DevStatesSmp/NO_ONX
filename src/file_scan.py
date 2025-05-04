@@ -4,6 +4,7 @@ import hashlib
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import threading
+from src.utils.config import ENABLE_DIRECT_RUN
 
 # Known malware hashes
 KNOWN_MALWARE_HASHES = {
@@ -102,5 +103,8 @@ def main():
     scan_directory(directory_to_scan, hash_type)
     print_results()
 
-if __name__ == "__main__":
+if __name__ == "__main__" and ENABLE_DIRECT_RUN:
     main()
+else:
+    if __name__ == "__main__":
+        print("[ERROR] This script cannot be run directly. Use NO_ONX.exe instead.")

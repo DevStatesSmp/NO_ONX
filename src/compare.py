@@ -4,6 +4,7 @@ import argparse
 from tabulate import tabulate
 from src.workload.compare_module import (deep_compare_dirs, deep_compare_files, 
                             simple_compare_files, simple_compare_dirs)
+from src.utils.config import ENABLE_DIRECT_RUN
 
 def main():
     parser = argparse.ArgumentParser(description="Compare file or directory (simple or deep)")
@@ -70,5 +71,9 @@ def main():
             result = deep_compare_files(args.path1, args.path2)
             print(f"Comparison result: {result}")
 
-if __name__ == "__main__":
+
+if __name__ == "__main__" and ENABLE_DIRECT_RUN:
     main()
+else:
+    if __name__ == "__main__":
+        print("[ERROR] This script cannot be run directly. Run NO_ONX.exe instead.")

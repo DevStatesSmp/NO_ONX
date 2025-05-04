@@ -26,6 +26,6 @@ def banner():
     for line in banner_lines:
         print(f"\033[92m{line.center(term_width)}\033[0m")
 
-    version_str = "v0.2.4 beta"
+    version_str = "v0.2.8 beta"
     print(" " * (max_line_length - len(version_str)) + f"\033[90m{version_str}\033[0m\n")
-    print("\033[96m📖 Usage: python <module_name>.py or nnx <Argument> <...>\033[0m\n")
+    print("\033[96m📖 Usage: python <module_name>.py (<argument>) or nnx <Argument> <...>\033[0m\n")

@@ -1,4 +1,5 @@
 from src.workload.file_info_module import info, check_permission, hidden_file_info
+from src.utils.config import ENABLE_DIRECT_RUN
 
 def info_commands():
     print("📌 Available operations in file_info.py:\n")
@@ -55,5 +56,8 @@ def main():
             print("❓ Unknown operation. Please choose from available commands.\n")
             info_commands()
 
-if __name__ == "__main__":
+if __name__ == "__main__" and ENABLE_DIRECT_RUN:
     main()
+else:
+    if __name__ == "__main__":
+        print("[ERROR] This script cannot be run directly. Use NO_ONX.exe instead.")

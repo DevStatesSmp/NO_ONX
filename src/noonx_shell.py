@@ -2,6 +2,7 @@ import os
 import subprocess
 import sys
 import socket
+from src.utils.config import ENABLE_INTERNAL_COMMANDS
 
 # Get user name
 username = os.getenv('USER') or os.getenv('USERNAME')
@@ -15,10 +16,14 @@ else:
 noonx_path = os.path.join(app_path, "noonx.py")
 
 INTERNAL_COMMANDS = {
+    # The internal commands are not supported anymore, use 'nnx' instead. (Only clear is supported)
+
     "compare": "python src/compare.py",
     "info": "python src/file_info.py",
     "readfile": "python src/readfile.py",
     "file_scan": "python src/file_scan.py",
+
+
     "clear": "cls" if os.name == "nt" else "clear"
 }
 
@@ -57,16 +62,22 @@ def no_onx_shell():
             args = cmd[len(base_cmd):].strip()
 
             if base_cmd in INTERNAL_COMMANDS:
-                final_cmd = INTERNAL_COMMANDS[base_cmd]
-                if args:
-                    final_cmd += " " + args
-                subprocess.run(final_cmd, shell=True)
+                if base_cmd == "clear":
+                    subprocess.run(INTERNAL_COMMANDS[base_cmd], shell=True)
+
+                elif ENABLE_INTERNAL_COMMANDS:
+                    subprocess.run(INTERNAL_COMMANDS[base_cmd], shell=True)
+                else:
+                    print("[NOTICE] INTERNAL_COMMANDS not supported anymore, use 'nnx' instead.\n")
+                continue
+
 
             elif base_cmd == "nnx":
                 cmd_args = cmd.split()
                 if len(cmd_args) > 1 and cmd_args[1] in NOONX_COMMANDS:
-                    final_cmd = f"python noonx.py {' '.join(cmd_args[1:])}"
+                    final_cmd = f"python {noonx_path} {' '.join(cmd_args[1:])}"
                     subprocess.run(final_cmd, shell=True)
+
                 else:
                     print(f"[ERROR] Unsupported nnx command: {cmd}, use 'nnx --help' for more information.")
 

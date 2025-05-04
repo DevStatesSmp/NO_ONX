@@ -1,6 +1,7 @@
 import os
 import sys
 from pathlib import Path
+from src.utils.config import ENABLE_DIRECT_RUN
 
 # Check error
 def validate_file_path(file_path):
@@ -57,6 +58,10 @@ def main():
         print("The file is treated as binary.")
         read_binary_file(file_path)
 
-if __name__ == "__main__":
+
+if __name__ == "__main__" and ENABLE_DIRECT_RUN:
     main()
+else:
+    if __name__ == "__main__":
+        print("[ERROR] This script cannot be run directly. Use NO_ONX.exe instead.")
 
