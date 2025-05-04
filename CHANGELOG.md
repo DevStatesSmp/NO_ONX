@@ -7,6 +7,10 @@
 - Add Backup, Compare command
 - Add Documents folder
 
+## Changed
+- Remove internal command on NO_ONX Shell (Not officially)
+- Stop support run [MODULE_NAME].py directly (You can active by editing config.py)
+
 ### Fixed
 - Fix modification commands
 - Improve stability
