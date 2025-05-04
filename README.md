@@ -1,10 +1,20 @@
-![have background](https://github.com/user-attachments/assets/0deb4708-e3a9-4219-85e4-3072af962c90)
-(This is invincible title card, btw for fun)<br>
-
-[CHANGELOG](https://github.com/DevStatesSmp/NO_ONX/blob/main/CHANGELOG.md)
-
 # NO_ONX
+<a href="https://github.com/DevStatesSmp/NO_ONX">
+  <img title="NO_ONX - Investigate and Protect!" src="https://github.com/user-attachments/assets/55d0ce25-e7c7-49e0-a3c8-49d48660179c" width="200" alt="NO_ONX Logo" />
+</a>
+<br>
+
+<a href="https://github.com/DevStatesSmp/NO_ONX/releases">
+  <img src="https://img.shields.io/badge/NO_ONX-v0.2.8%20Beta-orange?style=flat-square" alt="NO_ONX latest release" title="NO_ONX latest release" />
+</a>
+<a href="https://github.com/DevStatesSmp/NO_ONX/blob/main/CHANGELOG.md">
+  <img src="https://img.shields.io/badge/Changelog-Click me!-blue?style=flat-square" alt="NO_ONX Changelog" title="NO_ONX Changelog" />
+</a>
+
+<br>
+
 NO_ONX is a lightweight tool but useful to analysis, investigattion, security monitoring for Window
+
 ## Requirement
 - OS: Window 10+ (can be lower than Window 10)
 - Python: 3.1x
