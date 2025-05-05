@@ -4,8 +4,8 @@
 </a>
 <br>
 
-<a href="https://github.com/DevStatesSmp/NO_ONX/releases">
-  <img src="https://img.shields.io/badge/NO_ONX-v0.2.8%20Beta-orange?style=flat-square" alt="NO_ONX latest release" title="NO_ONX latest release" />
+<a href="https://github.com/DevStatesSmp/NO_ONX/releases/tag/beta-v0.2.9">
+  <img src="https://img.shields.io/badge/NO_ONX-v0.2.9%20Beta-orange?style=flat-square" alt="NO_ONX latest release" title="NO_ONX latest release" />
 </a>
 <a href="https://github.com/DevStatesSmp/NO_ONX/blob/main/CHANGELOG.md">
   <img src="https://img.shields.io/badge/Changelog-Click me!-blue?style=flat-square" alt="NO_ONX Changelog" title="NO_ONX Changelog" />
