@@ -2,6 +2,9 @@
 > 🪟 Since **v0.2.4 Beta**, NO_ONX officially supports **Windows only**. Linux support has been **discontinued**.
 
 ---
+## [v0.3.x Beta] - 2025-xx-xx
+- Scanning tools (Which from NO_ONX for Linux)
+
 ## [v0.2.9 Beta] - 2025-05-05
 ### Added
 - Minor update with improve stability and fix some bug
@@ -39,6 +42,7 @@
 ## [v0.1.2 Beta] - 2025-04-14 (Old Repository)
 ### Added
 - Several commands from `NO_ONX::modify` module.
+- Finally support NO_ONX for Window
 
 ### Fixed
 - Minor bugs related to file operations.
