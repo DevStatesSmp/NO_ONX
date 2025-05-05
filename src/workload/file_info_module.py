@@ -10,6 +10,10 @@ import platform
 import logging
 from datetime import datetime
 import mimetypes
+from tabulate import tabulate
+from colorama import init, Fore, Style
+
+init(autoreset=True)
 
 # Optional: only import win32security if on Windows and available
 try:
@@ -118,7 +122,6 @@ class info:
         if os.path.islink(path):
             info.symlink_info(path)
 
-
 class check_permission:
     """Class to analyze and print file/directory permissions along with special flags."""
 
@@ -130,16 +133,11 @@ class check_permission:
             if not os.path.exists(path):
                 print(f"[-] Path does not exist: {path}")
                 return
-
-            # For Windows, use win32security to get the permissions
             if platform.system() == "Windows" and win32security:
                 try:
-                    # Get the file security descriptor
                     sd = win32security.GetFileSecurity(path, win32security.DACL_SECURITY_INFORMATION)
-                    # Get the DACL (Discretionary Access Control List)
                     dacl = sd.GetSecurityDescriptorDacl()
 
-                    # Get file owner SID
                     owner_sid = sd.GetSecurityDescriptorOwner()
                     owner_name, domain, _ = win32security.LookupAccountSid(None, owner_sid)
 
@@ -147,7 +145,6 @@ class check_permission:
                     print(f"    Owner : {domain}\\{owner_name}")
                     print(f"    Permissions:")
 
-                    # Display ACE (Access Control Entries)
                     for i in range(dacl.GetAceCount()):
                         ace = dacl.GetAce(i)
                         print(f"      ACE {i}: {ace}")
@@ -155,7 +152,6 @@ class check_permission:
                 except Exception as e:
                     print(f"[-] Error reading security descriptor: {e}")
 
-            # Integrate with file info methods (for any other information)
             info.file_info(path)
 
         except FileNotFoundError:
@@ -206,7 +202,6 @@ class hidden_file_info:
             return {"error": f"An error occurred: {str(e)}"}
 
     def scan_hidden(self):
-        """Scan for hidden files and directories."""
         for root, dirs, files in os.walk(self.path):
             for name in files + dirs:
                 fullpath = os.path.join(root, name)
@@ -228,21 +223,78 @@ class hidden_file_info:
             print(f"Total hidden files and directories found: {self.hidden_count}")
 
 
-def main():
-    """Main function to handle argument parsing and execute the permission check."""
-    parser = argparse.ArgumentParser(description="Analyze file/folder permissions and retrieve additional information")
-    parser.add_argument("target", nargs='+', help="Target file(s) or directory(ies) to check permissions")
-    parser.add_argument("--scan-hidden", action="store_true", help="Scan for hidden files and directories")
-    args = parser.parse_args()
+    def hidden_file_main():
+        parser = argparse.ArgumentParser(description="Analyze file/folder permissions and retrieve additional information")
+        parser.add_argument("target", nargs='+', help="Target file(s) or directory(ies) to check permissions")
+        parser.add_argument("--scan-hidden", action="store_true", help="Scan for hidden files and directories")
+        args = parser.parse_args()
 
-    if args.scan_hidden:
+        if args.scan_hidden:
+            for path in args.target:
+                hidden_scanner = hidden_file_info(path)
+                hidden_scanner.scan_hidden()
+
         for path in args.target:
-            hidden_scanner = hidden_file_info(path)
-            hidden_scanner.scan_hidden()
+            check_permission.analyze(path)
 
-    for path in args.target:
-        check_permission.analyze(path)
+class file_list:
+    @staticmethod
+    def get_path(path=''):
+        file_list = []
 
-if __name__ == "__main__":
-    main()
+        for entry in os.scandir(path):
+            file_info = {}
+            if entry.is_file():
+                file_info['Name'] = entry.name
+                file_info['Size (KB)'] = round(entry.stat().st_size / 1024, 2)
+                file_info['Modified'] = time.ctime(entry.stat().st_mtime)
+                file_info['Permissions'] = oct(entry.stat().st_mode)[-3:]
+                file_info['IsHidden'] = False
+                file_list.append(file_info)
+            elif entry.is_dir():
+                dir_name = entry.name
+                if dir_name.startswith('.'):
+                    file_list.append({
+                        'Name': dir_name + '/',
+                        'Size (KB)': '-',
+                        'Modified': '-',
+                        'Permissions': '-',
+                        'IsHidden': True
+                    })
+                else:
+                    file_list.append({
+                        'Name': dir_name + '/',
+                        'Size (KB)': '-',
+                        'Modified': '-',
+                        'Permissions': '-',
+                        'IsHidden': False
+                    })
 
+        return file_list 
+
+    @staticmethod
+    def display_file_structure(path='.', level=0):
+        files = file_list.get_path(path)
+
+        if files:
+            table = []
+
+            for item in files:
+                indent = '  ' * level
+                if item['IsHidden']:
+                    name = Fore.RED + item['Name']
+                else:
+                    name = item['Name']
+
+                if item['Size (KB)'] == '-':
+                    table.append([f"{indent}{name}", 'Directory', '-', '-'])
+                else:
+                    table.append([f"{indent}{name}", 'File', item['Size (KB)'], item['Modified']])
+
+            print(tabulate(table, headers=["Name", "Type", "Size (KB)", "Modified"], tablefmt="pretty"))
+
+            for item in files:
+                if item['Size (KB)'] == '-' and not item['IsHidden']:
+                    file_list.display_file_structure(os.path.join(path, item['Name']), level + 1)
+        else:
+            print(f"The directory '{path}' is empty or doesn't contain any files or subfolders.")

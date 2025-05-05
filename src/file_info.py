@@ -1,5 +1,8 @@
+import os
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from src.workload.file_info_module import info, check_permission, hidden_file_info
-from src.utils.config import ENABLE_DIRECT_RUN
+from src.utils.config import FEATURE
 
 def info_commands():
     print("📌 Available operations in file_info.py:\n")
@@ -10,6 +13,8 @@ def info_commands():
     print("📁 dir_info(path)")
     print("📦 extended_info(path)\n")
     print("🔒 check_permission(path)\n")
+    print("🗂️ hidden_file_info(path)\n")
+    print("")
 
 def main():
     print("Available operations (Not number, enter name)")
@@ -56,7 +61,7 @@ def main():
             print("❓ Unknown operation. Please choose from available commands.\n")
             info_commands()
 
-if __name__ == "__main__" and ENABLE_DIRECT_RUN:
+if __name__ == "__main__" and FEATURE["ENABLE_DIRECT_RUN"]:
     main()
 else:
     if __name__ == "__main__":

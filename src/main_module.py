@@ -3,14 +3,16 @@
 import sys
 
 # Import source
-## Workload
+## Utils
 from .utils.help_module import help
 from .utils.system_info_module import get_system_info, get_gpu_info
 from .utils.banner_module import banner, version
 from .utils.loading_effect import loading_effect
+from .utils.config import FEATURE
+# Workload
 from .workload.compare_module import deep_compare_dirs, simple_compare_dirs
 from .workload.modification_module import mod
-from .workload.file_info_module import info, check_permission, hidden_file_info
+from .workload.file_info_module import info, check_permission, hidden_file_info, file_list
 from .workload.backup_module import *
 # Other
 from . import file_scan
@@ -19,9 +21,20 @@ from .readfile import *
 
 # ==== Main ====
 def main():
-    banner()
+    if not FEATURE.get("HIDDEN_BANNER", False):
+        banner()
+    else:
+        print("[ERROR] The NO_ONX banner is currently hidden. To display it, set 'HIDDEN_BANNER' to 'False' in the configuration.\n", file=sys.stderr)
+
+    # Sys args
     if len(sys.argv) >= 2:
         arg = sys.argv[1]
+        # Run NO_ONX Shell
+        if arg in ('--shell', '-s'):
+            loading_effect("preparing NO_ONX Shell...")
+            from .noonx_shell import no_onx_shell
+            no_onx_shell()
+            return
 
         # Main argument for noonx.py
         if arg in ('--help', '-h'):
@@ -41,25 +54,31 @@ def main():
         elif arg == '--file_hash' and len(sys.argv) >= 3:
             path = sys.argv[2]
             algo = sys.argv[3] if len(sys.argv) >= 4 else "sha256"
+            loading_effect(f"Generating hash for {path} using {algo.upper()}")
             info.file_hash(path, algo)
 
         elif arg == '--dir_info' and len(sys.argv) >= 3:
+            loading_effect(f"Loading directory info for {sys.argv[2]}")
             info.dir_info(sys.argv[2])
 
         elif arg == '--symlink_info' and len(sys.argv) >= 3:
+            loading_effect(f"Loading symlink info for {sys.argv[2]}")
             info.symlink_info(sys.argv[2])
 
         elif arg == '--extended_info' and len(sys.argv) >= 3:
+            loading_effect(f"Loading extended info for {sys.argv[2]}")
             info.extended_info(sys.argv[2])
 
         ## class check_permission
         elif arg == '--check_permission' and len(sys.argv) >= 3:
             path = sys.argv[2]
+            loading_effect(f"Checking permissions for {path}")
             check_permission.analyze(path)
         
         ## Class hidden_file_info
         elif arg == '--hidden_file_info' and len(sys.argv) >= 3:
             path = sys.argv[2]
+            loading_effect(f"Scanning hidden files in {path}")
             hidden_scanner = hidden_file_info(path)
             hidden_scanner.scan_hidden()
 
@@ -82,6 +101,7 @@ def main():
         elif arg == '--modify_file_permission' and len(sys.argv) >= 4:
             path = sys.argv[2]
             permission = sys.argv[3]
+            loading_effect(f"Modifying file permissions for {path}")
             mod.modify.modify_file_permission(path, permission)
 
         elif arg == '--modify_file_content' and len(sys.argv) >= 5:
@@ -90,9 +110,11 @@ def main():
             if operation == 'replace' or operation == 'delete':
                 target_text = sys.argv[4]
                 text = sys.argv[5] if operation == 'replace' and len(sys.argv) >= 6 else None
+                loading_effect(f"Modifying content in file {path}")
                 mod.modify.modify_file_content(path, operation, text, target_text)
             elif operation == 'append':
                 text = sys.argv[4]
+                loading_effect(f"Appending text to file {path}")
                 mod.modify.modify_file_content(path, operation, text)
 
         elif arg == '--modify_file_name' and len(sys.argv) >= 4:
@@ -104,6 +126,7 @@ def main():
             path = sys.argv[2]
             metadata_type = sys.argv[3]
             value = float(sys.argv[4])
+            loading_effect(f"Modifying file metadata for {path}")
             mod.modify.modify_file_metadata(path, metadata_type, value)
 
         elif arg == '--modify_file_line' and len(sys.argv) >= 5:
@@ -123,16 +146,19 @@ def main():
             path = sys.argv[2]
             operation = sys.argv[3]
             new_path = sys.argv[4]
+            loading_effect(f"Modifying directory {path}")
             mod.modify.modify_directory(path, operation, new_path)
 
         elif arg == '--modify_directory_permissions' and len(sys.argv) >= 4:
             path = sys.argv[2]
             permission = sys.argv[3]
+            loading_effect(f"Modifying directory permissions for {path}")
             mod.modify.modify_directory_permissions(path, permission)
 
         elif arg == '--modify_file_owner' and len(sys.argv) >= 4:
             path = sys.argv[2]
             new_owner = int(sys.argv[3])
+            loading_effect(f"Modifying file owner for {path}")
             mod.modify.modify_file_owner(path, new_owner)
 
         # File Scan
@@ -219,8 +245,18 @@ def main():
             else:
                 print("Error: Invalid backup type. Use 'backup_file', 'backup_dir', 'backup_file_timestamp', 'backup_multiple_files', 'backup_multiple_directory', or 'clean_old_backups'.", file=sys.stderr)
 
+        elif arg == '--file_list' and len(sys.argv) >= 3:
+            path = sys.argv[2]
+            loading_effect(f"Loading file list for {path}")
+            file_list_data = file_list.get_path(path)
+
+            if file_list_data:
+                file_list.display_file_structure(path)
+            else:
+                print(f"No files found or error occurred in {path}")
+
         else:
             print(f"\033[91m[!] Unknown or incomplete command:\033[0m {' '.join(sys.argv[1:])}")
-            print("Run with \033[93m--help\033[0m to see available modules.\n")
+            print("Run with \033[93mnnx --help\033[0m to see available modules.\n")
     else:
-        print("\033[90mTip:\033[0m Use --help for more commands")
+        print("\033[90mTip:\033[0m Use nnx --help for more commands")

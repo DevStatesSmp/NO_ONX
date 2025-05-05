@@ -2,9 +2,10 @@ import os
 import sys
 import argparse
 from tabulate import tabulate
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from src.workload.compare_module import (deep_compare_dirs, deep_compare_files, 
                             simple_compare_files, simple_compare_dirs)
-from src.utils.config import ENABLE_DIRECT_RUN
+from src.utils.config import FEATURE
 
 def main():
     parser = argparse.ArgumentParser(description="Compare file or directory (simple or deep)")
@@ -72,7 +73,7 @@ def main():
             print(f"Comparison result: {result}")
 
 
-if __name__ == "__main__" and ENABLE_DIRECT_RUN:
+if __name__ == "__main__" and FEATURE["ENABLE_DIRECT_RUN"]:
     main()
 else:
     if __name__ == "__main__":

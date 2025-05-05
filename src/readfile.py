@@ -1,7 +1,8 @@
 import os
 import sys
 from pathlib import Path
-from src.utils.config import ENABLE_DIRECT_RUN
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from src.utils.config import FEATURE
 
 # Check error
 def validate_file_path(file_path):
@@ -59,7 +60,7 @@ def main():
         read_binary_file(file_path)
 
 
-if __name__ == "__main__" and ENABLE_DIRECT_RUN:
+if __name__ == "__main__" and FEATURE["ENABLE_DIRECT_RUN"]:
     main()
 else:
     if __name__ == "__main__":

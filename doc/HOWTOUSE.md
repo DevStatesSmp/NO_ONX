@@ -54,7 +54,10 @@
       ```bash
       nnx --hidden_file_info /path/to/directory
       ```
-
+- **file_list(path)**: Check file & directory list
+      ```bash
+      nnx --file_list /path/to/directory
+      ```
 ---
 
 ## 3. **File Modification Commands**

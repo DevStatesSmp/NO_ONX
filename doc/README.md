@@ -10,22 +10,16 @@ For bug reports or feedback, please contact: https://t.me/+-hUpHRhvj9wyYmE1
 3. Do not delete any modules or files included in the package to avoid errors during execution.
 4. If you encounter any problems, you are allowed to edit the code to fix errors or customize the function or you can report errors on the Telegram group.
 5. The commands are not guaranteed to be safe and risk-free so please consider carefully before using the command
-6. When changing the code yourself, if it is to spy on others, attack, ... for personal purposes, you will be responsible, DevStatesSmp is not involved
+7. If you use "Ctrl + C" while the code is running, it will trigger a keyboard interrupt. This will stop the execution of the program immediately and you will got KeyboardInterrupt Error, don't worry, its not a bug.
 
 # CONFIG
 ## How to Change Config
 
-To modify the configuration, you can edit the `config.py` file included in the package. Below are the available options:
-
-```python
-ENABLE_DIRECT_RUN = False  # Set to True to run the script directly
-ENABLE_INTERNAL_COMMANDS = False  # Set to True to enable internal commands
-... (Will add in future)
-```
+To modify the configuration, you can edit the `config.py` on src/utils to edit some configuration.
 
 ### Steps:
 1. Open the `config.py` file in a text editor.
-2. Set `ENABLE_XXX_YYY' to true
+2. Set `ENABLE_XXX_YYY' value to true or false.
 3. Save the file after making changes.
 
 Make sure to double-check your changes to avoid unexpected behavior.
