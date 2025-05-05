@@ -38,38 +38,38 @@ git clone https://github.com/DevStatesSmp/NO_ONX
 Or if you prefer to download a specific version manually, visit the [Releases page](https://github.com/DevStatesSmp/NO_ONX/releases) and download the latest version.
 
 ## NO_ONX Command structure (until v0.2.9 Beta)
-NO_ONX
-├── Main Options
-│   ├── --help
-│   ├── -h
-│   ├── --system_info
-│   ├── -si
-│   ├── --version
-│   └── -v
-│
-├── File Info
-│   ├── --readfile
-│   ├── --file_info
-│   ├── --file_hash
-│   ├── --dir_info
-│   ├── --file_list
-│   ├── --symlink_info
-│   ├── --extended_info
-│   ├── --scan_dir
-│   ├── --check_permission
-│   └── --hidden_file_info
-│
-├── Modify (::modify module)
-│   ├── --modify_file_permission
-│   ├── --modify_file_content
-│   ├── --modify_file_name
-│   ├── --modify_file_metadata
-│   ├── --modify_file_line
-│   ├── --modify_file_symlink
-│   ├── --modify_directory
-│   ├── --modify_directory_permissions
-│   └── --modify_file_owner
-│
-├── Other
-│   ├── --compare --mode
-│   └── --backup
+NO_ONX <br>
+├── Main Options <br>
+│   ├── --help <br>
+│   ├── -h <br>
+│   ├── --system_info <br>
+│   ├── -si <br> 
+│   ├── --version<br>
+│   └── -v<br>
+│<br>
+├── File Information (::modify module)<br>
+│   ├── --readfile<br>
+│   ├── --file_info<br>
+│   ├── --file_hash<br>
+│   ├── --dir_info<br>
+│   ├── --file_list<br>
+│   ├── --symlink_info<br>
+│   ├── --extended_info<br>
+│   ├── --scan_dir<br>
+│   ├── --check_permission<br>
+│   └── --hidden_file_info<br>
+│<br>
+├── Modify (::modify module)<br>
+│   ├── --modify_file_permission<br>
+│   ├── --modify_file_content<br>
+│   ├── --modify_file_name<br>
+│   ├── --modify_file_metadata<br>
+│   ├── --modify_file_line<br>
+│   ├── --modify_file_symlink<br>
+│   ├── --modify_directory<br>
+│   ├── --modify_directory_permissions<br>
+│   └── --modify_file_owner<br>
+│<br>
+├── Other<br>
+│   ├── --compare --mode<br>
+│   └── --backup<br>
