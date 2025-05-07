@@ -10,14 +10,13 @@
 <a href="https://github.com/DevStatesSmp/NO_ONX/blob/main/CHANGELOG.md">
   <img src="https://img.shields.io/badge/Changelog-Click me!-blue?style=flat-square" alt="NO_ONX Changelog" title="NO_ONX Changelog" />
 </a>
-<a href="https://t.me/+-hUpHRhvj9wyYmE1">
-  <img src="https://img.shields.io/badge/Official%20telegram-Click%20me!-blue?style=flat-square" alt="NO_ONX - Bug report & feedback" title="NO_ONX - Bug report & feedback" />
-</a>
+
 
 
 <br>
 
-NO_ONX is a lightweight tool but useful to analysis, investigattion, security monitoring for Window
+NO_ONX is a lightweight tool but useful to analysis, investigattion, security monitoring for Window<br>
+[WARNING: The v0.2.9 beta is the final update and no more support]
 
 ## Requirement
 - OS: Window 10+ (can be lower than Window 10)
