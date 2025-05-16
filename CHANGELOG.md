@@ -2,9 +2,16 @@
 > 🪟 Since **v0.2.4 Beta**, NO_ONX officially supports **Windows only**. Linux support has been **discontinued**.
 
 ---
-## [v0.3.x Beta] - 2025-xx-xx
-- Scanning tools (Which from NO_ONX for Linux)
+## [v0.3.0 Beta] - 2025-05-16
+### Added
+- Ported Detective command from Linux to Window
+- Added Activity, Security, System Health, Network (Detective)
 
+### Fixed
+- Improve stability and optimization
+- Fix serious error still exists
+- Fix not display error
+  
 ## [v0.2.9 Beta] - 2025-05-05
 ### Added
 - Minor update with improve stability and fix some bug
