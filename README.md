@@ -16,7 +16,6 @@
 <br>
 
 NO_ONX is a lightweight tool but useful to analysis, investigattion, security monitoring for Window<br>
-[WARNING: The v0.2.9 beta is the final update and no more support]
 
 ## Requirement
 - OS: Window 10+ (can be lower than Window 10)
