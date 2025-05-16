@@ -1,4 +1,0 @@
-pyfiglet
-psutil
-pywin32
-tabulate
