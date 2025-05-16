@@ -50,7 +50,6 @@ def no_onx_shell():
                     if any(cmd_arg in arg_str for cmd_arg in NOONX_COMMANDS):
                         try:
                             import noonx  # Import module noonx
-                            # Gọi hàm từ noonx thay vì chạy file trực tiếp
                             sys.argv = ["noonx.py"] + arg_str.split()
                             result = noonx.main()
                             if result:
