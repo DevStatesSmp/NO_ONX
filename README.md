@@ -1,11 +1,11 @@
 # NO_ONX
 <a href="https://github.com/DevStatesSmp/NO_ONX">
-  <img title="NO_ONX - Investigate and Protect!" src="https://github.com/user-attachments/assets/55d0ce25-e7c7-49e0-a3c8-49d48660179c" width="200" alt="NO_ONX Logo" />
+  <img title="NO_ONX - no content lol" src="https://github.com/user-attachments/assets/55d0ce25-e7c7-49e0-a3c8-49d48660179c" width="200" alt="NO_ONX Logo" />
 </a>
 <br>
 
-<a href="https://github.com/DevStatesSmp/NO_ONX/releases/tag/beta-v0.2.9">
-  <img src="https://img.shields.io/badge/NO_ONX-v0.2.9%20Beta-orange?style=flat-square" alt="NO_ONX latest release" title="NO_ONX latest release" />
+<a href="https://github.com/DevStatesSmp/NO_ONX/releases/tag/beta-v0.3.0">
+  <img src="https://img.shields.io/badge/NO_ONX-v0.3.0%20Beta-orange?style=flat-square" alt="NO_ONX latest release" title="NO_ONX latest release" />
 </a>
 <a href="https://github.com/DevStatesSmp/NO_ONX/blob/main/CHANGELOG.md">
   <img src="https://img.shields.io/badge/Changelog-Click me!-blue?style=flat-square" alt="NO_ONX Changelog" title="NO_ONX Changelog" />
