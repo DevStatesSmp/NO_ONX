@@ -1,5 +1,6 @@
 # Usage:
-1. nnx <argument> <...>
+1. NO_ONX.exe <argument> <...>
+3. python src/[MODULE_NAME].py (<argument> <...>)
 
 (Note: you can use python noonx.py <argument> <...> but not recommend to use because too complex and long)
 
@@ -162,6 +163,18 @@
       nnx --backup -backup_multiple_files /path/to/file1 /path/to/file2
       nnx --backup -backup_multiple_files /path/to/directory1 /path/to/directory2
       nnx --backup -clean_old_backups
+      ```
+---
+
+## 7. **Monitoring System**
+- **--detective <detective_type> (path if needed)**: Monitoring system, activity and security
+    - **Usage**:
+      ```bash
+      nnx --detective --type watcher /path/to/directory
+      nnx --detective --type sys_health # or system_health
+      nnx --detective --type activity # RUN POWERSHELL AS ADMINISTRATOR
+      nnx --detective --type security # RUN POWERSHELL AS ADMINISTRATOR
+      nnx --detective --type network # RUN POWERSHELL AS ADMINISTRATOR
       ```
 ---
 

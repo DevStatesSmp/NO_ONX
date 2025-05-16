@@ -2,15 +2,12 @@ import shutil
 import os
 import time
 import logging
-
-# Cài đặt logging để theo dõi quá trình sao lưu và phục hồi
 logging.basicConfig(filename='backup.log', level=logging.INFO, 
-                    format='%(asctime)s - %(levelname)s - %(message)s')
+                        format='%(asctime)s - %(levelname)s - %(message)s')
 
 current_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 backup_dir = os.path.join(current_dir, "backup")
 
-# Tạo thư mục backup nếu chưa có
 os.makedirs(backup_dir, exist_ok=True)
 
 def backup_file(source):

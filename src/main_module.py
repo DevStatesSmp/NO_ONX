@@ -4,7 +4,7 @@ import sys
 
 # Import source
 ## Utils
-from .utils.help_module import help
+from .utils.help_module import *
 from .utils.system_info_module import get_system_info, get_gpu_info
 from .utils.banner_module import banner, version
 from .utils.loading_effect import loading_effect
@@ -12,23 +12,19 @@ from .utils.config import FEATURE
 # Workload
 from .workload.compare_module import deep_compare_dirs, simple_compare_dirs
 from .workload.modification_module import mod
+from .workload import file_scan_module
 from .workload.file_info_module import info, check_permission, hidden_file_info, file_list
 from .workload.backup_module import *
-# Other
-from . import file_scan
-from .readfile import *
+from .workload.readfile_module import read_binary_file, read_text_file, validate_file_path
+from .workload.detective_module import watch_detective, activity_detective, monitor_user_activity, network_detective, system_health
     
 
 # ==== Main ====
 def main():
-    if not FEATURE.get("HIDDEN_BANNER", False):
-        banner()
-    else:
-        print("[ERROR] The NO_ONX banner is currently hidden. To display it, set 'HIDDEN_BANNER' to 'False' in the configuration.\n", file=sys.stderr)
-
     # Sys args
     if len(sys.argv) >= 2:
         arg = sys.argv[1]
+
         # Run NO_ONX Shell
         if arg in ('--shell', '-s'):
             loading_effect("preparing NO_ONX Shell...")
@@ -38,13 +34,32 @@ def main():
 
         # Main argument for noonx.py
         if arg in ('--help', '-h'):
-            loading_effect("Loading help")
-            help()
+            if len(sys.argv) > 2:
+                sub_arg = sys.argv[2]
+                if sub_arg == 'compare':
+                    help_compare()
+                elif sub_arg == 'backup':
+                    help_backup()
+                elif sub_arg == 'monitoring':
+                    help_monitoring()
+                elif sub_arg == 'modify':
+                    help_modify()
+                elif sub_arg == 'fileinfo':
+                    help_fileinfo()
+                else:
+                    loading_effect("Loading help...")
+                    help()
+            else:
+                loading_effect("Loading help...")
+                help()
+
         elif arg in ('--system_info', '-si'):
             loading_effect("Fetching system info")
             get_system_info()
 
         elif arg in ('--version', '-v'):
+            if not FEATURE.get("HIDDEN_BANNER", False):
+                banner()
             version()
 
         ## Class info
@@ -94,7 +109,8 @@ def main():
             elif file_type == 'binary':
                 read_binary_file(file_path)
             else:
-                print("Error: Invalid readfile type. Use 'text' or 'binary'.", file=sys.stderr)
+                print(f"\033[91m[!]\033[0m Invalid readfile type: {file_type}. Use 'text' or 'binary'.", file=sys.stderr)
+                return
 
 
         # Modification
@@ -166,15 +182,15 @@ def main():
             path = sys.argv[2]
             algo = sys.argv[3] if len(sys.argv) >= 4 else "sha256"
             loading_effect(f"Scanning directory ({path}) using {algo.upper()}")
-            file_scan.reset_results()
-            file_scan.scan_directory(path, algo)
-            file_scan.print_results()
+            file_scan_module.reset_results()
+            file_scan_module.scan_directory(path, algo)
+            file_scan_module.print_results()
 
         # Compare
-        elif arg == '--compare --mode' and len(sys.argv) >= 5:
-            compare_type = sys.argv[2]
-            path1 = sys.argv[3]
-            path2 = sys.argv[4]
+        elif len(sys.argv) >= 5 and sys.argv[1] == '--compare' and sys.argv[2] == '--mode':
+            compare_type = sys.argv[3]
+            path1 = sys.argv[4]
+            path2 = sys.argv[5]
     
             if compare_type == 'deep':
                 loading_effect(f"Deep comparing {path1} and {path2}")
@@ -201,7 +217,8 @@ def main():
                 else:
                     print("No differences found.")
             else:
-                print("Error: Invalid compare type. Use 'deep' or 'simple'.", file=sys.stderr)
+                print(f"\033[91m[!]\033[0m Invalid compare type: {compare_type}. Use 'deep' or 'simple'.")
+                return
 
         # Backup
         elif arg == '--backup':
@@ -214,7 +231,8 @@ def main():
                 backup_file(path1)
             elif backup_type == '-backup_restore_file':
                 if not path1 or not path2:
-                    print("Error: Both backup file path and restore location are required.")
+                    print("\033[91m[!]\033[0m Both backup file path and restore location are required.")
+                    return
                 else:
                     loading_effect(f"Restoring {path1} to {path2}")
                     restore_backup(path1, path2)
@@ -223,8 +241,8 @@ def main():
                 loading_effect(f"Backing up {path1}")
                 backup_directory(path1)
             elif backup_type == '-backup_restore_dir':
-                loading_effect(f"Restoring {path1}")
-                restore_directory(path1)
+                loading_effect(f"Restoring {path1} to {path2}")
+                restore_directory(path1, path2)
 
             elif backup_type == '-backup_file_timestamp':
                 loading_effect(f"Backing up {path1} with timestamp")
@@ -232,7 +250,7 @@ def main():
 
             elif backup_type == '-backup_multiple_files':
                 loading_effect(f"Backing up multiple files: {path1} and {path2}")
-                backup_multiple_files(path1, path2)
+                backup_multiple_files([path1, path2])
 
             elif backup_type == '-backup_multiple_directory':
                 loading_effect(f"Restoring multiple files: {path1} and {path2}")
@@ -243,8 +261,9 @@ def main():
                 clean_old_backups(days=30)
 
             else:
-                print("Error: Invalid backup type. Use 'backup_file', 'backup_dir', 'backup_file_timestamp', 'backup_multiple_files', 'backup_multiple_directory', or 'clean_old_backups'.", file=sys.stderr)
-
+                print(f"\033[91m[!]\033[0m Invalid backup type: {backup_type}. Use 'backup_file', 'backup_dir', 'backup_file_timestamp', 'backup_multiple_files', 'backup_multiple_directory', or 'clean_old_backups'.")
+                return
+            
         elif arg == '--file_list' and len(sys.argv) >= 3:
             path = sys.argv[2]
             loading_effect(f"Loading file list for {path}")
@@ -253,10 +272,42 @@ def main():
             if file_list_data:
                 file_list.display_file_structure(path)
             else:
-                print(f"No files found or error occurred in {path}")
+                print(f"\033[91m[!]\033[0m No files found or error occurred in: {path}")
+                return
 
+        # Monitoring Security
+        elif len(sys.argv) >= 2 and sys.argv[1] == '--detective':
+
+            if len(sys.argv) < 4:
+                print("\033[91m[!]\033[0m Missing arguments for '--detective'. Usage: --detective --type [watcher|activity|security|network|sys_health]", file=sys.stderr)
+                return 
+            if len(sys.argv) < 4 or sys.argv[2] != '--type':
+                print("\033[91m[!]\033[0m Missing or invalid type! Use '--type' followed by 'watcher', 'activity', 'security', 'network', or 'sys_health'.", file=sys.stderr)
+                return
+            else:
+                detective_type = sys.argv[3]
+    
+            if detective_type == 'watcher':
+                if len(sys.argv) >= 5:
+                    path = sys.argv[4]
+                    watch_detective(path)
+                else:
+                    print("\033[91m[!]\033[0m Missing path for 'watcher' detective type.")
+                    return
+        
+            elif detective_type == 'activity':
+                activity_detective()
+
+            elif detective_type == "security":
+                monitor_user_activity()
+
+            elif detective_type == "network":
+                network_detective()
+
+            elif detective_type in ["sys_health", "system_health"]:
+                system_health()
+            else:
+                print(f"\033[91m[!]\033[0m Invalid detective type: {detective_type}. Use 'watcher', 'activity', 'security', 'network', or 'sys_health'.")
         else:
             print(f"\033[91m[!] Unknown or incomplete command:\033[0m {' '.join(sys.argv[1:])}")
             print("Run with \033[93mnnx --help\033[0m to see available modules.\n")
-    else:
-        print("\033[90mTip:\033[0m Use nnx --help for more commands")
