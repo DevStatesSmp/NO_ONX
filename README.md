@@ -35,7 +35,7 @@ git clone https://github.com/DevStatesSmp/NO_ONX
 
 Or if you prefer to download a specific version manually, visit the [Releases page](https://github.com/DevStatesSmp/NO_ONX/releases) and download the latest version.
 
-## NO_ONX Command structure (until v0.2.9 Beta)
+## NO_ONX Command structure (until v0.3.0 Beta)
 NO_ONX <br>
 ├── Main Options <br>
 │   ├── --help <br>
@@ -70,11 +70,11 @@ NO_ONX <br>
 │<br>
 ├── Monitoring System (Mainly detective)<br>
 │   ├── --detective --type<br>
-│      └── --watcher<br>
-│      └── --activity<br>
-│      └── --security<br>
-│      └── --network<br>
-│      └── --sys_health (or system_health)<br>
+│        └── --watcher<br>
+│        └── --activity<br>
+│        └── --security<br>
+│        └── --network<br>
+│        └── --sys_health (or system_health)<br>
 ├── Other<br>
 │   ├── --compare --mode<br>
 │   └── --backup<br>
