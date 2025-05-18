@@ -68,6 +68,13 @@ NO_ONX <br>
 │   ├── --modify_directory_permissions<br>
 │   └── --modify_file_owner<br>
 │<br>
+├── Monitoring System (Mainly detective)<br>
+│   ├── --detective --type<br>
+│      └── --watcher<br>
+│      └── --activity<br>
+│      └── --security<br>
+│      └── --network<br>
+│      └── --sys_health (or system_health)<br>
 ├── Other<br>
 │   ├── --compare --mode<br>
 │   └── --backup<br>
