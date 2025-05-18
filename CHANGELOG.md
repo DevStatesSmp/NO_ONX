@@ -2,8 +2,14 @@
 > 🪟 Since **v0.2.4 Beta**, NO_ONX officially supports **Windows only**. Linux support has been **discontinued**.
 
 ---
-# [v0.3.1 Beta] - 2025-05-xx
-No information
+## [v0.3.1 Beta] - 2025-05-xx
+### Added
+- Add plugin, allowing you to add your own commands
+- Add new two commands
+
+### Fixed
+- Fully fixed not showing error (or better for your eyes)
+- Fixed some bugs
 
 ## [v0.3.0 Beta] - 2025-05-16
 ### Added
