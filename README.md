@@ -1,6 +1,6 @@
 # NO_ONX
 <a href="https://github.com/DevStatesSmp/NO_ONX">
-  <img title="NO_ONX - no content lol" src="https://github.com/user-attachments/assets/55d0ce25-e7c7-49e0-a3c8-49d48660179c" width="200" alt="NO_ONX Logo" />
+  <img title="NO_ONX - no content lol" src="https://github.com/user-attachments/assets/dd3b4b8d-ec74-429b-a629-2c1b1f3d6aac" width="200" alt="NO_ONX Logo" />
 </a>
 <br>
 
@@ -10,8 +10,6 @@
 <a href="https://github.com/DevStatesSmp/NO_ONX/blob/main/CHANGELOG.md">
   <img src="https://img.shields.io/badge/Changelog-Click me!-blue?style=flat-square" alt="NO_ONX Changelog" title="NO_ONX Changelog" />
 </a>
-
-
 
 <br>
 
