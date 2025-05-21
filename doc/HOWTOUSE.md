@@ -171,6 +171,8 @@
     - **Usage**:
       ```bash
       nnx --detective --type watcher /path/to/directory
+      nnx --detective --process_watcher
+      nnx --detective --process # Recommed to run as administrator
       nnx --detective --type sys_health # or system_health
       nnx --detective --type activity # RUN POWERSHELL AS ADMINISTRATOR
       nnx --detective --type security # RUN POWERSHELL AS ADMINISTRATOR

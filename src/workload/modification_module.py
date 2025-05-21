@@ -1,3 +1,5 @@
+# THIS IS MODULE, DO NOT RUN THIS FILE DIRECTLY
+
 import os
 import shutil
 import time
@@ -15,7 +17,7 @@ class mod:
                 os.chmod(path, int(permission, 8))  # Unix-based systems
                 print(f"Permission of '{path}' changed to {permission}")
             except Exception as e:
-                print(f"Error modifying permission: {e}")
+                print(f"\033[91m[!]\033[0m eror when modifying permission: {e}")
 
         @staticmethod
         def modify_file_content(path, operation, text, target_text=None):
@@ -37,12 +39,12 @@ class mod:
                         file.truncate()
                         file.writelines(content)
                     else:
-                        print("Invalid operation.")
+                        print("\033[91m[!]\033[0m Invalid operation.")
                         return
 
                     print(f"File content modified in {operation} mode.")
             except Exception as e:
-                print(f"Error modifying file content: {e}")
+                print(f"\033[91m[!]\033[0m Error when modifying file content: {e}")
 
         @staticmethod
         def modify_file_name(old_name, new_name):
@@ -50,7 +52,7 @@ class mod:
                 os.rename(old_name, new_name)
                 print(f"File renamed from {old_name} to {new_name}")
             except Exception as e:
-                print(f"Error renaming file: {e}")
+                print(f"\033[91m[!]\033[0m Error when renaming file: {e}")
 
         @staticmethod
         def modify_file_metadata(path, metadata_type, value):
@@ -67,7 +69,7 @@ class mod:
                 else:
                     print("Invalid metadata type.")
             except Exception as e:
-                print(f"Error modifying file metadata: {e}")
+                print(f"\033[91m[!]\033[0m error when modifying file metadata: {e}")
 
         @staticmethod
         def modify_file_line(path, line_number, operation, new_line=None):
@@ -82,7 +84,7 @@ class mod:
                     elif operation == 'insert' and new_line:
                         lines.insert(line_number - 1, new_line + "\n")
                     else:
-                        print("Invalid operation.")
+                        print("\033[91m[!]\033[0m Invalid operation.")
                         return
 
                     file.seek(0)
@@ -90,7 +92,7 @@ class mod:
                     file.writelines(lines)
                     print(f"File line {line_number} modified in {operation} mode.")
             except Exception as e:
-                print(f"Error modifying file line: {e}")
+                print(f"\033[91m[!]\033[0m Error when modifying file line: {e}")
 
         @staticmethod
         def modify_file_symlink(target_path, symlink_path, operation):
@@ -111,7 +113,7 @@ class mod:
                 else:
                     print("Invalid operation.")
             except Exception as e:
-                print(f"Error modifying symlink: {e}")
+                print(f"\033[91m[!]\033[0m Error when modifying symlink: {e}")
 
         @staticmethod
         def modify_directory(path, operation, new_path=None):
@@ -123,9 +125,9 @@ class mod:
                     shutil.move(path, new_path)
                     print(f"Directory moved from {path} to {new_path}")
                 else:
-                    print("Invalid operation.")
+                    print("\033[91m[!]\033[0m Invalid operation.")
             except Exception as e:
-                print(f"Error modifying directory: {e}")
+                print(f"\033[91m[!]\033[0m Error when modifying directory: {e}")
 
         @staticmethod
         def modify_directory_permissions(path, permission):
@@ -136,7 +138,7 @@ class mod:
                 os.chmod(path, int(permission, 8))  # Unix-based systems
                 print(f"Permissions of directory '{path}' changed to {permission}")
             except Exception as e:
-                print(f"Error modifying directory permissions: {e}")
+                print(f"\033[91m[!]\033[0m Error when modifying directory permissions: {e}")
 
         @staticmethod
         def modify_file_owner(path, new_owner):
@@ -147,4 +149,4 @@ class mod:
                 # This functionality is generally not supported on Windows unless using Windows Subsystem for Linux (WSL)
                 print("File owner modification is typically not supported on Windows.")
             except Exception as e:
-                print(f"Error modifying file owner: {e}")
+                print(f"\033[91m[!]\033[0m Error when modifying file owner: {e}")

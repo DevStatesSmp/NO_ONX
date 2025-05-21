@@ -2,3 +2,4 @@ psutil
 pywin32
 tabulate
 wim
+colorama

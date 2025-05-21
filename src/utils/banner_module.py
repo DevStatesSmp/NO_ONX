@@ -1,19 +1,19 @@
 import shutil
 from src.utils.config import SETTINGS
-
+import platform
 
 def version():
     version_str = f"""
-    NO_ONX
-
     --------------------------------------
+    Author: DevStatesSmp
     Version: {SETTINGS["NNX_VERSION"]}
+    
+    - Platform: {platform.system()} {platform.release()} ({platform.version()}
+    - Python {platform.python_version()}
+    - Update infomation: https://github.com/DevStatesSmp/NO_ONX/blob/main/CHANGELOG.md
 
-    - Update infomation: Check the changelog
-    - Platform: Windows 10/11
-
-    Changelog: https://github.com/DevStatesSmp/NO_ONX/blob/main/CHANGELOG.md
     For bug reports or feedback, please contact: https://t.me/+-hUpHRhvj9wyYmE1
+    --------------------------------------
     """
 
     print(f"\033[90mVersion:\033[0m {version_str}")
@@ -32,7 +32,6 @@ def banner():
         "╚═╝  ╚═══╝ ╚════╝ ╚════════╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═╝"
     ]
 
-    # Calculate left padding for centering the banner block as a whole
     banner_width = max(len(line) for line in ascii_banner)
     left_padding = max((term_width - banner_width) // 2, 0)
 

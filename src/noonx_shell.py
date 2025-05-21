@@ -5,6 +5,7 @@ import socket
 import traceback
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from src.utils.config import INTERNAL_COMMANDS, NOONX_COMMANDS, FEATURE, SETTINGS, get_prompt
+from src.utils.getError import *
 
 if getattr(sys, 'frozen', False):
     app_path = sys._MEIPASS
@@ -34,13 +35,13 @@ def no_onx_shell():
             args = cmd[len(base_cmd):].strip()
 
             if base_cmd in INTERNAL_COMMANDS:
-                if base_cmd == "clear" or base_cmd == "ls" or base_cmd == "cd":
+                if base_cmd == "clear" or base_cmd == "ls":
                     subprocess.run(INTERNAL_COMMANDS[base_cmd], shell=True)
 
                 elif FEATURE["ENABLE_INTERNAL_COMMANDS"]:
                     subprocess.run(INTERNAL_COMMANDS[base_cmd], shell=True)
                 else:
-                    print("\033[91m[•]\033[0m INTERNAL_COMMANDS not supported anymore, use 'nnx' instead.\n")
+                    print("\033[91m[•] INTERNAL_COMMANDS not supported anymore, use 'nnx' instead.\033[0m\n")
                 continue
 
             elif base_cmd == "nnx":
@@ -49,7 +50,7 @@ def no_onx_shell():
                     arg_str = ' '.join(cmd_args[1:])
                     if any(cmd_arg in arg_str for cmd_arg in NOONX_COMMANDS):
                         try:
-                            import noonx  # Import module noonx
+                            import noonx
                             sys.argv = ["noonx.py"] + arg_str.split()
                             result = noonx.main()
                             if result:
@@ -58,12 +59,12 @@ def no_onx_shell():
                             print(f"\033[91m[!]\033[0m {e}")
                             traceback.print_exc()
                     else:
-                        print(f"\033[91m[!]\033[0m Unsupported nnx command: {cmd}, use 'nnx --help' for more information.\n")
+                        handle_error(ErrorContent.UNSUPPORTEDCOMMAND_ERROR, {cmd}, ErrorReason.UNSUPPORTED_COMMAND, to_stderr=True, exit_code=None)
                 else:
-                    print("\033[91m[!]\033[0m Missing arguments for 'nnx'. Use 'nnx --help' for guidance.\n")
 
+                    handle_error(ErrorContent.MISSING_ARGUMENTS_ERROR, {cmd}, ErrorReason.MISSING_ARGUMENTS_NNX, to_stderr=True, exit_code=None)
             else:
-                print(f"\033[91m[!]\033[0m Unsupported nnx command: {cmd}, use 'nnx --help' for more information.\n")
+                handle_error(ErrorContent.UNSUPPORTEDCOMMAND_ERROR, {cmd}, ErrorReason.UNSUPPORTED_COMMAND, to_stderr=True, exit_code=None)
 
         except KeyboardInterrupt:
             print("\nUse 'exit' to quit.")
@@ -76,4 +77,4 @@ if __name__ == '__main__' and SETTINGS["NNX_SHELL"]:
 
 else:
     if __name__ == '__main__':
-        print("\033[91m[!]\033[0m The NO_ONX Shell have been disabled, To use it, set 'NNX_Shell' to 'True' in the configuration.\n", file=sys.stderr)
+        print("\033[91m[!] The NO_ONX Shell have been disabled,\033[0m To use it, set 'NNX_Shell' to 'True' in the configuration.\n", file=sys.stderr)

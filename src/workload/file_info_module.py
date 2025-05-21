@@ -12,6 +12,10 @@ from datetime import datetime
 import mimetypes
 from tabulate import tabulate
 from colorama import init, Fore, Style
+import sys
+
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "utils"))
+from src.utils.getError import handle_error, ErrorContent, ErrorReason
 
 init(autoreset=True)
 
@@ -23,7 +27,7 @@ except ImportError:
     win32security = None
 
 # set up logging
-logging.basicConfig(filename='hidden_file_info.log', level=logging.INFO, format='%(asctime)s - %(message)s')
+logging.basicConfig(filename='file_info.log', level=logging.INFO, format='%(asctime)s - %(message)s')
 
 # Define info class with static methods for file operations
 class info:
@@ -49,7 +53,7 @@ class info:
     @staticmethod
     def file_info(path):
         if not os.path.exists(path):
-            print(f"❌ Path not found: {path}")
+            handle_error(ErrorContent.READFILE_ERROR, {path}, ErrorReason.PATH_NOT_FOUND)
             return
 
         try:
@@ -67,17 +71,21 @@ class info:
             print(f"🕓 Last accessed: {time.ctime(stat_info.st_atime)}")
             print(f"🕓 Created (inode change): {time.ctime(stat_info.st_ctime)}")
         except Exception as e:
-            print(f"❌ Error retrieving file info: {e}")
+            handle_error(
+                ErrorContent.READFILE_ERROR,
+                {"path": path, "error": str(e)},
+                ErrorReason.UNKNOWN if not isinstance(e, FileNotFoundError) else ErrorReason.PATH_NOT_FOUND
+            )
 
     @staticmethod
     def file_hash(path, algo="sha256"):
         if not os.path.isfile(path):
-            print(f"❌ Not a valid file: {path}")
+            handle_error(ErrorContent.READFILE_ERROR, {path}, ErrorReason.INVALID_FILE)
             return
 
         hash_func = getattr(hashlib, algo.lower(), None)
         if hash_func is None:
-            print(f"❌ Unsupported hash algorithm: {algo}")
+            handle_error("WARNING", {algo}, "Unsupported hash algorithm")
             return
 
         try:
@@ -88,22 +96,32 @@ class info:
                 print(f"🔑 {algo.upper()} hash of {path}: {hasher.hexdigest()}")
         except Exception as e:
             print(f"❌ Error computing hash: {e}")
+            handle_error(
+                ErrorContent.READFILE_ERROR,
+                {"path": path, "error": str(e)},
+                ErrorReason.UNKNOWN if not isinstance(e, FileNotFoundError) else ErrorReason.PATH_NOT_FOUND
+            )
 
     @staticmethod
     def symlink_info(path):
         if not os.path.islink(path):
-            print(f"❌ Not a symlink: {path}")
+            print(ErrorContent.READFILE_ERROR, {path}, "Not a symlink.")
             return
         try:
             target = os.readlink(path)
             print(f"🔗 Symlink: {path} -> {target}")
         except Exception as e:
-            print(f"❌ Error reading symlink: {e}")
+            handle_error(
+                ErrorContent.READFILE_ERROR,
+                {"path": path, "error": str(e)},
+                ErrorReason.UNKNOWN if not isinstance(e, FileNotFoundError) else ErrorReason.PATH_NOT_FOUND
+            )
 
     @staticmethod
     def dir_info(path):
         if not os.path.isdir(path):
             print(f"❌ Not a directory: {path}")
+            handle_error(ErrorContent.READFILE_ERROR, {path}, ErrorReason.NOT_DIRECTORY)
             return
         try:
             print(f"📁 Contents of directory {path}:")
@@ -111,7 +129,13 @@ class info:
                 full = os.path.join(path, item)
                 print(f" - {item} ({'dir' if os.path.isdir(full) else 'file'})")
         except Exception as e:
-            print(f"❌ Error listing directory: {e}")
+            handle_error(
+                ErrorContent.READFILE_ERROR,
+                {"path": path, "error": str(e)},
+                ErrorReason.PATH_NOT_FOUND if isinstance(e, FileNotFoundError) else (
+                    ErrorReason.PERMISSION_DENIED if isinstance(e, PermissionError) else ErrorReason.UNKNOWN
+                )
+            )
 
     @staticmethod
     def extended_info(path):
@@ -123,15 +147,13 @@ class info:
             info.symlink_info(path)
 
 class check_permission:
-    """Class to analyze and print file/directory permissions along with special flags."""
 
     @staticmethod
     def analyze(path):
-        """Analyzes and prints file/directory permissions along with special flags."""
         try:
             # Check if path exists
             if not os.path.exists(path):
-                print(f"[-] Path does not exist: {path}")
+                handle_error(ErrorContent.READFILE_ERROR, {path}, ErrorReason.PATH_NOT_EXISTS)
                 return
             if platform.system() == "Windows" and win32security:
                 try:
@@ -150,16 +172,30 @@ class check_permission:
                         print(f"      ACE {i}: {ace}")
 
                 except Exception as e:
-                    print(f"[-] Error reading security descriptor: {e}")
+                    handle_error(
+                        ErrorContent.READFILE_ERROR,
+                        {"path": path, "error": str(e)},
+                        ErrorReason.UNKNOWN if not isinstance(e, FileNotFoundError) else ErrorReason.PATH_NOT_FOUND
+                    )
 
             info.file_info(path)
 
         except FileNotFoundError:
-            print(f"[-] File not found: {path}")
+            handle_error(ErrorContent.READFILE_ERROR, {path}, ErrorReason.FILE_NOT_FOUND)
         except PermissionError:
-            print(f"[-] Permission denied: {path}")
+            handle_error(ErrorContent.READFILE_ERROR, {path}, ErrorReason.PERMISSION_DENIED)
         except Exception as e:
+            error_details = {
+                "path": path,
+                "error": str(e),
+                "exception_type": type(e).__name__
+            }
             print(f"[-] Error analyzing {path}: {e}")
+            handle_error(
+                ErrorContent.READFILE_ERROR,
+                error_details,
+                ErrorReason.UNKNOWN if not isinstance(e, FileNotFoundError) else ErrorReason.PATH_NOT_FOUND
+            )
 
 # Hidden file info
 class hidden_file_info:
@@ -168,18 +204,16 @@ class hidden_file_info:
         self.hidden_count = 0
     
     def is_hidden(self, filepath):
-        """Check if the file is hidden based on its name or permissions."""
         name = os.path.basename(filepath)
         if name.startswith('.'):
             return True
         return not os.access(filepath, os.R_OK)
 
     def file_info(self, filepath):
-        """Collect file information like size, hash, and modification time."""
         try:
             statinfo = os.lstat(filepath)
             if stat.S_ISDIR(statinfo.st_mode): 
-                return {"error": f"'{filepath}' is a directory, not a file."}
+                return handle_error(ErrorContent.READFILE_ERROR, {filepath}, ErrorReason.NOT_DIRECTORY)
 
             mime, _ = mimetypes.guess_type(filepath)
             with open(filepath, 'rb') as f:
@@ -199,7 +233,7 @@ class hidden_file_info:
             }
             return file_info_dict
         except Exception as e:
-            return {"error": f"An error occurred: {str(e)}"}
+            return handle_error(ErrorContent.READFILE_ERROR, {"filepath": filepath, "error": str(e)}, ErrorReason.UNKNOWN)
 
     def scan_hidden(self):
         for root, dirs, files in os.walk(self.path):
@@ -215,7 +249,7 @@ class hidden_file_info:
                     logging.info(f"[Hidden] {fullpath}")
                     for k, v in info.items():
                         logging.info(f"    {k}: {v}")
-                    logging.info("")  # Add a blank line for readability
+                    logging.info("")
 
         if self.hidden_count == 0:
             print("No hidden files or directories found.")
@@ -297,4 +331,4 @@ class file_list:
                 if item['Size (KB)'] == '-' and not item['IsHidden']:
                     file_list.display_file_structure(os.path.join(path, item['Name']), level + 1)
         else:
-            print(f"The directory '{path}' is empty or doesn't contain any files or subfolders.")
+            handle_error(ErrorContent.READFILE_ERROR, {"path": path}, ErrorReason.NOT_DIRECTORY)

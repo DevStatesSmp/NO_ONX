@@ -1,9 +1,7 @@
 # THIS IS MODULE, DO NOT RUN THIS FILE DIRECTLY
 
 import os
-import hashlib
 import filecmp
-import stat
 
 from .additions.compare_addition import hash_file, walk_dir
 

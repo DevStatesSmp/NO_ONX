@@ -129,6 +129,21 @@ def help():
            -backup_multiple_files <path1> <path2>
            -backup_multiple_files <path1> <path2>
            -clean_old_backups
+          
+\033[94mMonitoring commands:\033[0m
+  \033[96m--detective\033[0m --type <option> (<path>)                       - Monitoring System
+      \033[93mArguments:\033[0m
+          <option> - 'watcher', 'activity', or 'security',...
+          <path1> - Path to the file or directory (Only for 'watcher' needed)
+
+       <option>:
+           watcher <path>
+           process_watcher
+           activity (RUN AS ADMINISTRATOR)
+           security (RUN AS ADMINISTRATOR)
+           process (RECOMMEND TO RUN AS ADMINISTRATOR)
+           network (RECOMMEND TO RUN AS ADMINISTRATOR)
+          sys_health (system_health)
 """)
     
 # Options
@@ -189,9 +204,19 @@ def help_monitoring():
   \033[93m--system_info\033[0m (-si)      - Show system information
 
 \033[94mCommands:\033[0m
-  \033[93m--detective watcher\033[0m      - Monitor file system changes
-  \033[93m--detective activity\033[0m     - Show activity logs
-  \033[93m--detective security\033[0m     - Show security-related information    
+  \033[96m--detective\033[0m --type <option> (<path>)                       - Monitoring System
+      \033[93mArguments:\033[0m
+          <option> - 'watcher', 'activity', or 'security',...
+          <path1> - Path to the file or directory (Only for 'watcher' needed)
+
+       <option>:
+           watcher <path>
+           process_watcher
+           activity (RUN AS ADMINISTRATOR)
+           security (RUN AS ADMINISTRATOR)
+           process (RECOMMEND TO RUN AS ADMINISTRATOR)
+           network (RECOMMEND TO RUN AS ADMINISTRATOR)
+          sys_health (system_health) 
 """)
     
 def help_modify():

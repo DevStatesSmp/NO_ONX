@@ -9,6 +9,7 @@ from .utils.system_info_module import get_system_info, get_gpu_info
 from .utils.banner_module import banner, version
 from .utils.loading_effect import loading_effect
 from .utils.config import FEATURE
+from .utils.getError import *
 # Workload
 from .workload.compare_module import deep_compare_dirs, simple_compare_dirs
 from .workload.modification_module import mod
@@ -16,14 +17,53 @@ from .workload import file_scan_module
 from .workload.file_info_module import info, check_permission, hidden_file_info, file_list
 from .workload.backup_module import *
 from .workload.readfile_module import read_binary_file, read_text_file, validate_file_path
-from .workload.detective_module import watch_detective, activity_detective, monitor_user_activity, network_detective, system_health
-    
+from .workload.detective_module import watch_detective, activity_detective, monitor_user_activity, network_detective, system_health, process_detective, process_watcher
+
 
 # ==== Main ====
 def main():
+    # Plugin management
+    from .plugins.init import load_plugins, get_plugin, list_plugins, ask_use_plugin
+    load_plugins()
+
+
     # Sys args
     if len(sys.argv) >= 2:
         arg = sys.argv[1]
+
+        # Plugins
+        if arg == "--plugins" :
+            print("[PLUGINS] Available Plugins:")
+            for p in list_plugins():
+                print(f" - {p}")
+            return
+
+        if arg == "--plugin":
+            if len(sys.argv) < 3:
+                print("Please specify plugin name")
+                return
+            plugin_name = sys.argv[2]
+            plugin_args = sys.argv[3:]
+            plugin = get_plugin(plugin_name)
+            if not plugin:
+                print(f"[!] Plugin '{plugin_name}' not found")
+                return
+            if hasattr(plugin, 'execute'):
+                if ask_use_plugin(plugin_name):
+                    plugin.execute(plugin_args)
+                else:
+                    return
+            else:
+                handle_error("Error when loading plugins", {plugin_name}, "Has no execute() function.")
+            return
+
+        if arg == '--list_plugins':
+            plugins = list_plugins()
+            print("[PLUGINS] Available Plugins:")
+            for p in plugins:
+                print(f" - {p}")
+            return
+
 
         # Run NO_ONX Shell
         if arg in ('--shell', '-s'):
@@ -109,7 +149,7 @@ def main():
             elif file_type == 'binary':
                 read_binary_file(file_path)
             else:
-                print(f"\033[91m[!]\033[0m Invalid readfile type: {file_type}. Use 'text' or 'binary'.", file=sys.stderr)
+                handle_error(ErrorContent.MISSING_TYPE_COMMAND, {file_type}, ErrorReason.INVALID_TYPE), print("Use 'text' or 'binary'")
                 return
 
 
@@ -217,7 +257,7 @@ def main():
                 else:
                     print("No differences found.")
             else:
-                print(f"\033[91m[!]\033[0m Invalid compare type: {compare_type}. Use 'deep' or 'simple'.")
+                handle_error(ErrorContent.MISSING_TYPE_COMMAND, {compare_type}, ErrorReason.INVALID_TYPE), print("Use 'deep' or 'simple'.")
                 return
 
         # Backup
@@ -261,7 +301,7 @@ def main():
                 clean_old_backups(days=30)
 
             else:
-                print(f"\033[91m[!]\033[0m Invalid backup type: {backup_type}. Use 'backup_file', 'backup_dir', 'backup_file_timestamp', 'backup_multiple_files', 'backup_multiple_directory', or 'clean_old_backups'.")
+                handle_error(ErrorContent.MISSING_TYPE_COMMAND, {backup_type}, ErrorReason.INVALID_TYPE), print("\nUse 'backup_file', 'backup_dir', 'backup_file_timestamp', 'backup_multiple_files', 'backup_multiple_directory', or 'clean_old_backups'.")
                 return
             
         elif arg == '--file_list' and len(sys.argv) >= 3:
@@ -279,10 +319,10 @@ def main():
         elif len(sys.argv) >= 2 and sys.argv[1] == '--detective':
 
             if len(sys.argv) < 4:
-                print("\033[91m[!]\033[0m Missing arguments for '--detective'. Usage: --detective --type [watcher|activity|security|network|sys_health]", file=sys.stderr)
+                handle_error(ErrorContent.MISSING_ARGUMENTS_ERROR, ErrorReason.MISSING_ARGUMENTS), print("\nUsage: --detective --type [watcher|activity|security|network|sys_health]", file=sys.stderr)
                 return 
             if len(sys.argv) < 4 or sys.argv[2] != '--type':
-                print("\033[91m[!]\033[0m Missing or invalid type! Use '--type' followed by 'watcher', 'activity', 'security', 'network', or 'sys_health'.", file=sys.stderr)
+                handle_error(ErrorContent.MISSING_TYPE_COMMAND, {detective_type}, ErrorReason.INVALID_TYPE), print("\nUse 'watcher', 'activity', 'security', 'network', or 'sys_health'.", file=sys.stderr)
                 return
             else:
                 detective_type = sys.argv[3]
@@ -292,7 +332,7 @@ def main():
                     path = sys.argv[4]
                     watch_detective(path)
                 else:
-                    print("\033[91m[!]\033[0m Missing path for 'watcher' detective type.")
+                    handle_error(ErrorContent.MISSING_ARGUMENTS_ERROR, {"path": None}, ErrorReason.MISSING_PATH)
                     return
         
             elif detective_type == 'activity':
@@ -306,8 +346,18 @@ def main():
 
             elif detective_type in ["sys_health", "system_health"]:
                 system_health()
+
+            elif detective_type == "process":
+                process_detective()
+
+            elif detective_type == "process_watcher":
+                process_watcher()
             else:
-                print(f"\033[91m[!]\033[0m Invalid detective type: {detective_type}. Use 'watcher', 'activity', 'security', 'network', or 'sys_health'.")
+                handle_error(ErrorContent.MISSING_TYPE_COMMAND, {detective_type}, ErrorReason.MISSING_TYPE), print("Use 'watcher', 'activity', 'security', 'network', or 'sys_health'.")
+        
+        # Added you custom command here
+        # Ex: elif len(sys.argv) >= 2 and sys.argv[1] == '--example':
+        
         else:
-            print(f"\033[91m[!] Unknown or incomplete command:\033[0m {' '.join(sys.argv[1:])}")
+            handle_error(ErrorContent.UNSUPPORTEDCOMMAND_ERROR, sys.argv[1] if len(sys.argv) > 1 else None, ErrorReason.UNSUPPORTED_COMMAND)
             print("Run with \033[93mnnx --help\033[0m to see available modules.\n")

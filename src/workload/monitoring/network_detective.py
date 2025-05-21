@@ -8,6 +8,9 @@ import os
 import sys
 import logging
 
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "utils"))
+from src.utils.getError import handle_error, ErrorContent, ErrorReason
+
 def is_admin():
     if os.name == 'nt':  # Windows
         try:
@@ -16,8 +19,7 @@ def is_admin():
         except Exception:
             return False
     else:
-        # On non-Windows, always return False (no admin check)
-        return False
+        sys.exit(1)
 
 # Thiết lập logging file + console
 logging.basicConfig(
@@ -29,7 +31,6 @@ logging.basicConfig(
     ]
 )
 
-# Hỗ trợ xử lý Windows console encoding (nếu cần)
 if os.name == 'nt':
     import ctypes
     ctypes.windll.kernel32.SetConsoleCP(65001)
@@ -47,7 +48,6 @@ def ask_continue_on_interrupt():
             print("Please enter Y or n.")
 
 def net_traffic_monitor(interval=2, duration=30):
-    """Giám sát lưu lượng mạng từng interface, tính max và mean"""
     logging.info(f"Start monitoring network traffic for {duration}s, interval {interval}s.")
     prev = {}
     stats = {}
@@ -91,7 +91,6 @@ def net_traffic_monitor(interval=2, duration=30):
     logging.info("Network traffic monitoring finished.")
 
 def conn_track(filter_status=None, max_show=20):
-    """Xem danh sách kết nối với filter trạng thái và tên tiến trình"""
     logging.info(f"Listing active connections with filter_status={filter_status}")
     conns = psutil.net_connections()
     count = 0
@@ -118,7 +117,6 @@ def conn_track(filter_status=None, max_show=20):
     logging.info(f"Displayed {count} connections.")
 
 def scan_port_worker(host, port, timeout):
-    """Worker quét 1 port, trả về (port, banner) hoặc None"""
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.settimeout(timeout)
         try:
@@ -134,7 +132,6 @@ def scan_port_worker(host, port, timeout):
             return None
 
 def port_scan(host='127.0.0.1', start_port=1, end_port=1024, timeout=0.3, max_workers=100, save_file=None):
-    """Quét port với ThreadPoolExecutor và lưu kết quả"""
     logging.info(f"Start port scanning {host}:{start_port}-{end_port} with timeout {timeout}s and max_workers {max_workers}")
     open_ports = []
 
@@ -154,7 +151,7 @@ def port_scan(host='127.0.0.1', start_port=1, end_port=1024, timeout=0.3, max_wo
         for port, banner in sorted(open_ports):
             info = f" - Banner: {banner}" if banner else ""
             print(f"Port {port}{info}")
-            if port not in (22, 80, 443):  # Ví dụ cảnh báo port không phổ biến
+            if port not in (22, 80, 443):
                 logging.warning(f"Unusual open port detected: {port} on {host}")
     else:
         print("No open ports found.")
@@ -170,12 +167,13 @@ def port_scan(host='127.0.0.1', start_port=1, end_port=1024, timeout=0.3, max_wo
             logging.info(f"Port scan results saved to {save_file}")
         except Exception as e:
             logging.error(f"Failed to save scan results: {e}")
+            handle_error(ErrorContent.SAVE_RESULT_ERROR, ErrorReason.CANNOT_WRITE_FILE, str(e))
     print()
 
 def networker_detective():
     while True:
         try:
-            print("\n=== Network Tool for Windows (Enhanced) ===")
+            print("\n=== OPTIONS NETWORK ===")
             print("1. Monitor Network Traffic")
             print("2. List Active Connections")
             print("3. Port Scan")
@@ -188,6 +186,7 @@ def networker_detective():
                     net_traffic_monitor(interval=interval, duration=duration)
                 except Exception as e:
                     logging.error(f"Error in Network Traffic Monitor: {e}")
+                    handle_error(ErrorContent.WHEN_RUNNING_ERROR, ErrorReason.UNKNOWN_ERROR, str(e))
             elif choice == '2':
                 status = input("Filter by connection status (e.g., ESTABLISHED, LISTENING) or Enter for all: ").strip().upper()
                 if not status:
@@ -197,6 +196,7 @@ def networker_detective():
                     conn_track(filter_status=status, max_show=max_show)
                 except Exception as e:
                     logging.error(f"Error in Connection Tracker: {e}")
+                    handle_error(ErrorContent.WHEN_RUNNING_ERROR, ErrorReason.UNKNOWN_ERROR, str(e))
             elif choice == '3':
                 host = input("Target host (default 127.0.0.1): ").strip() or "127.0.0.1"
                 start_port = int(input("Start port (default 1): ") or 1)
@@ -208,11 +208,12 @@ def networker_detective():
                     port_scan(host, start_port, end_port, timeout, max_workers, save_file)
                 except Exception as e:
                     logging.error(f"Error in Port Scanner: {e}")
+                    handle_error(ErrorContent.WHEN_RUNNING_ERROR, ErrorReason.UNKNOWN_ERROR, str(e))
             elif choice == '4':
                 print("Exiting program...")
                 break
             else:
-                print("Invalid choice. Please enter 1-4.")
+                handle_error(ErrorContent.INVALID_OPTION_ERROR,{choice}, "Please enter 1-4")
         except KeyboardInterrupt:
             if not ask_continue_on_interrupt():
                 break

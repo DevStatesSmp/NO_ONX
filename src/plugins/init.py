@@ -5,7 +5,7 @@ import sys
 from src.utils.loading_effect import loading_effect
 from src.utils.getError import *
 
-plugin_dir = os.path.dirname(__file__)
+plugin_dir = os.path.join(os.path.dirname(__file__), "..", "plugins")
 
 loaded_plugins = {}
 
@@ -30,18 +30,14 @@ def load_plugins():
         loaded_plugins["init"] = init_module
         print("[PLUGIN] Loaded: init (Required)")
     except Exception as e:
-        handle_error(
-            ErrorContent.PLUGIN_ERROR,
-            {"exception": str(e), "traceback": getattr(e, '__traceback__', None)},
-            ErrorReason.FAILED_LOADPLUGIN
-        )
+        handle_error(ErrorContent.PLUGIN_ERROR, {"exception": str(e), "traceback": getattr(e, '__traceback__', None)}, ErrorReason.FAILED_LOADPLUGIN)
         sys.exit(1) 
 
     plugin_files = find_plugins(plugin_dir)
 
 
     if plugin_files:
-        loading_effect("Loading plugins...\n")
+        loading_effect("Loading plugins...", duration=1)
 
     for module_name in plugin_files:
         plugin_name = module_name.split('.')[-1]
@@ -65,3 +61,5 @@ def list_plugins():
 def ask_use_plugin(plugin_name):
     answer = input(f"Do you want to use '{plugin_name}'? (y/N): ").strip().lower()
     return answer == 'y'
+
+plugin_files = find_plugins(plugin_dir)

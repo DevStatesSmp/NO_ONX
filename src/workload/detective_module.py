@@ -1,72 +1,166 @@
+# THIS IS MODULE, DO NOT RUN THIS FILE DIRECTLY
+
 import subprocess
 import sys
 import os
+import sys
+
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "utils"))
+from src.utils.getError import handle_error, ErrorContent, ErrorReason
 
 from .monitoring.activity_detective import monitor_user_activity
 from .monitoring.security_detective import check_privilege_escalation
 from .monitoring.network_detective import networker_detective, is_admin
 from .monitoring.sys_health import sys_health
 
-def watch_detective(path):
-    # Get path to C++ source code
-    cpp_file = os.path.abspath(os.path.join(os.path.dirname(__file__), 'monitoring', 'watcher_detective.cpp'))
+def get_bin_dir():
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    src_dir = os.path.abspath(os.path.join(base_dir, '..'))
+    bin_dir = os.path.join(src_dir, '..', 'bin')
+    bin_dir = os.path.normpath(bin_dir)
+    if not os.path.exists(bin_dir):
+        os.makedirs(bin_dir)
+    return bin_dir
 
-    # Check if the C++ file exists
+def watch_detective(path):
+    cpp_file = os.path.abspath(os.path.join(os.path.dirname(__file__), 'monitoring', 'watcher_detective.cpp'))
     if not os.path.exists(cpp_file):
-        print(f"[!] Error: '{cpp_file}' not found.")
+        handle_error(ErrorContent.COMPILER_CPP_ERROR, {cpp_file}, ErrorReason.MISSING_FILE)
         sys.exit(1)
 
-    # Compile the C++ file (if not already compiled)
-    if not os.path.exists('./detective'):
+    bin_dir = get_bin_dir()
+    exe_path = os.path.join(bin_dir, 'detective.exe')  # Windows exe
+
+    if not os.path.exists(exe_path):
         print(f"\n🔨 Compiling {cpp_file}...")
         try:
-            subprocess.run(['g++', cpp_file, '-o', 'detective'], check=True)
-            print("[+] Compilation successful.")
+            subprocess.run(['g++', cpp_file, '-o', exe_path], check=True)
+            print("\033[92m[+]\033[0m Compilation successful.")
         except subprocess.CalledProcessError:
-            print("[!] Compilation failed. Please check for errors in the C++ file.")
+            handle_error(ErrorContent.COMPILER_CPP_ERROR, {cpp_file})
             sys.exit(1)
 
-    # Validate the directory path
     if not os.path.exists(path):
-        print("[!] Invalid path. Exiting.")
+        handle_error(ErrorContent.MISSING_TYPE_COMMAND, {path}, ErrorReason.INVALID_PATH)
         sys.exit(1)
 
     print(f"\n📂 Watching: {path}\n")
 
-    # Run the C++ binary (detective)
     try:
         process = subprocess.Popen(
-            ['./detective', path],
+            [exe_path, path],
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
             text=True
         )
 
-        # Display the output of the C++ program
         for line in process.stdout:
             print(line, end='')
 
     except FileNotFoundError:
-        print("[!] Error: 'detective' binary not found. Did you compile it?")
-        print("    Try: g++ -o detective no_onx_watcher.cpp")
+        handle_error(ErrorContent.MISSING_ARGUMENTS_ERROR, {exe_path}, ErrorReason.MISSING_COMPILER_EXE)
     except KeyboardInterrupt:
-        print("\n[!] Interrupted by user. Exiting...")
+        print("\n\033[91m[!] Interrupted by user. Exiting...\033[0m")
+
+def process_detective():
+    cpp_file = os.path.abspath(os.path.join(os.path.dirname(__file__), 'monitoring', 'process_anomaly_detective.cpp'))
+    if not os.path.exists(cpp_file):
+        handle_error(ErrorContent.COMPILER_CPP_ERROR, {cpp_file}, ErrorReason.MISSING_FILE)
+        sys.exit(1)
+
+    bin_dir = get_bin_dir()
+    exe_path = os.path.join(bin_dir, 'process_anomaly_detective.exe')  # Windows exe
+
+    if not os.path.exists(exe_path):
+        print(f"\n🔨 Compiling {cpp_file}...")
+        try:
+            subprocess.run([
+                'g++', '-std=c++17', '-Wall', '-Wextra', '-o', exe_path, cpp_file,
+                '-lole32', '-loleaut32', '-lwbemuuid', '-lpsapi'
+            ], check=True)
+            print("\033[92m[+]\033[0m Compilation successful.")
+        except subprocess.CalledProcessError:
+            handle_error(ErrorContent.COMPILER_CPP_ERROR, {cpp_file})
+            sys.exit(1)
+
+    print(f"\n🚀 Running {os.path.basename(exe_path)}...\n")
+
+    try:
+        process = subprocess.Popen(
+            [exe_path],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            bufsize=1
+        )
+
+        for line in process.stdout:
+            print(line, end='')
+
+        process.wait()
+
+    except FileNotFoundError:
+        handle_error(ErrorContent.MISSING_ARGUMENTS_ERROR, {exe_path}, ErrorReason.MISSING_COMPILER_EXE)
+    except KeyboardInterrupt:
+        print("\n\033[91m[!] Interrupted by user. Exiting...\033[0m")
+
+def process_watcher():
+    cpp_file = os.path.abspath(os.path.join(os.path.dirname(__file__), 'monitoring', 'process_watcher_detective.cpp'))
+    if not os.path.exists(cpp_file):
+        handle_error(ErrorContent.COMPILER_CPP_ERROR, {cpp_file}, ErrorReason.MISSING_FILE)
+        sys.exit(1)
+
+    bin_dir = get_bin_dir()
+    exe_path = os.path.join(bin_dir, 'process_watcher_detective.exe')  # Windows exe
+
+    if not os.path.exists(exe_path):
+        print(f"\n🔨 Compiling {cpp_file}...")
+        try:
+            subprocess.run([
+                'g++', '-std=c++17', '-Wall', '-Wextra', '-o', exe_path, cpp_file,
+                '-lole32', '-loleaut32', '-lwbemuuid', '-lpsapi'
+            ], check=True)
+            print("\033[92m[+]\033[0m Compilation successful.")
+        except subprocess.CalledProcessError:
+            handle_error(ErrorContent.COMPILER_CPP_ERROR, {cpp_file})
+            sys.exit(1)
+
+    print(f"\n🚀 Running {os.path.basename(exe_path)}...\n")
+
+    try:
+        process = subprocess.Popen(
+            [exe_path],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            bufsize=1
+        )
+
+        for line in process.stdout:
+            print(line, end='')
+
+        process.wait()
+
+    except FileNotFoundError:
+        handle_error(ErrorContent.MISSING_ARGUMENTS_ERROR, {exe_path}, ErrorReason.MISSING_COMPILER_EXE)
+    except KeyboardInterrupt:
+        print("\n\033[91m[!] Interrupted by user. Exiting...\033[0m")
 
 def activity_detective():
     try:
         monitor_user_activity()
     except Exception as e:
-        print(f"[!] Error in activity_detective: {e}")
+        print(f"\033[91m[!] Error in activity_detective:\033[0m {e}")
 
 def security_detective():
     try:
         check_privilege_escalation()
     except Exception as e:
-        print(f"[!] Error in security_detective: {e}")
+        print(f"\033[91m[!] Error in security_detective:\033[0m {e}")
 
 def network_detective():
     if not is_admin():
-        print("[!] You are not running this program as Administrator.")
+        print("\033[91m[!]\033[0m You are not running this program as Administrator.")
         print("Some features may not work properly without admin privileges.")
         ans = input("Do you want to continue anyway? (y/N): ").strip().lower()
         if ans != 'y':

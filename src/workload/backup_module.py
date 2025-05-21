@@ -1,7 +1,14 @@
+# THIS IS MODULE, DO NOT RUN THIS FILE DIRECTLY
+
 import shutil
 import os
 import time
 import logging
+import sys
+
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "utils"))
+from src.utils.getError import handle_error, ErrorContent, ErrorReason
+
 logging.basicConfig(filename='backup.log', level=logging.INFO, 
                         format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -25,9 +32,10 @@ def backup_file(source):
         shutil.copy(source, backup_location)
         logging.info(f"Backup successful: {source} -> {backup_location}")
         print(f"Backup successful: {source} -> {backup_location}")
+        
     except Exception as e:
         logging.error(f"Error during backup: {e}")
-        print(f"Error during backup: {e}")
+        handle_error(ErrorContent.BACKUP_FILE_ERROR, str(e), reason=ErrorReason.UNKNOWN_ERROR)
 
 def restore_backup(backup_location, restore_location):
     try:
@@ -39,7 +47,7 @@ def restore_backup(backup_location, restore_location):
         print(f"Restore successful: {backup_location} -> {restore_location}")
     except Exception as e:
         logging.error(f"Error during restore: {e}")
-        print(f"Error during restore: {e}")
+        handle_error(ErrorContent.RESTORE_FILE_ERROR, str(e), reason=ErrorReason.UNKNOWN_ERROR)
 
 def backup_directory(source_dir):
     try:
@@ -56,7 +64,7 @@ def backup_directory(source_dir):
         print(f"Backup successful: {source_dir} -> {backup_location}")
     except Exception as e:
         logging.error(f"Error during backup: {e}")
-        print(f"Error during backup: {e}")
+        handle_error(ErrorContent.BACKUP_DIREC_ERROR, str(e), reason=ErrorReason.NOT_A_DIRECTORY)
 
 def restore_directory(backup_location, restore_location):
     try:
@@ -71,7 +79,7 @@ def restore_directory(backup_location, restore_location):
         print(f"Restore successful: {backup_location} -> {restore_location}")
     except Exception as e:
         logging.error(f"Error during restore: {e}")
-        print(f"Error during restore: {e}")
+        handle_error(ErrorContent.RESTORE_DIREC_ERROR, str(e), reason=ErrorReason.UNKNOWN_ERROR)
 
 def backup_file_with_timestamp(source):
     try:
@@ -86,7 +94,7 @@ def backup_file_with_timestamp(source):
         print(f"Backup successful: {source} -> {backup_location}")
     except Exception as e:
         logging.error(f"Error during backup: {e}")
-        print(f"Error during backup: {e}")
+        handle_error(ErrorContent.BACKUP_FILE_ERROR, str(e), reason=ErrorReason.UNKNOWN_ERROR)
 
 def backup_multiple_files(files):
     for file in files:
@@ -109,4 +117,4 @@ def clean_old_backups(days=30):
                 print(f"Deleted old backup: {file_path}")
     except Exception as e:
         logging.error(f"Error during cleaning old backups: {e}")
-        print(f"Error during cleaning old backups: {e}")
+        handle_error(ErrorContent.BACKUP_DIREC_ERROR, str(e), reason=ErrorReason.UNKNOWN_ERROR)

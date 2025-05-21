@@ -14,11 +14,13 @@ FEATURE = {
     "DISABLE_AUTO_UPDATE": False, # Set to True to disable auto update
     "ENABLE_INTERNAL_COMMANDS": False, # Set to True to enable internal commands
     "ENABLE_NNX_COMMANDS": True, # Set to False to disable NNX commands
+    "TEST": False,
 
     # "ENABLE_FORCE_RUN": False, # Set to True to force run the script, not available yet
 
     # DISABLE
     "HIDDEN_BANNER": False, # Set to True to hide the banner
+    "DISABLE_LOADING": False,
 }
 
 
@@ -28,7 +30,7 @@ FEATURE = {
 from typing import Dict, Any
 
 SETTINGS: Dict[str, Any] = {
-    "NNX_VERSION": "v0.3.0 Beta", # NNX version
+    "NNX_VERSION": "v0.3.1 Beta", # NNX version
     "NNX_SHELL": True, # NNX Shell, not recommended to diasble this, but you can if you want to.
 }
 
@@ -37,11 +39,6 @@ def get_prompt():
 
 # === NNX COMMANDS ===
 INTERNAL_COMMANDS = {
-    # The internal commands are not supported anymore, use 'nnx' instead.
-    "compare": "python src/compare.py",
-    "info": "python src/file_info.py",
-    "file_scan": "python src/file_scan.py",
-
     # Only basic command is useable
     "clear": "cls" if os.name == "nt" else "clear", # Clear
     "ls": "dir" if os.name == "nt" else "ls", # ls
@@ -53,9 +50,12 @@ NOONX_COMMANDS = [
     "--help", "-h", "--system_info", "-si", "--version", "-v", # main options
     "--readfile", "--file_info", "--file_hash", "--dir_info", "--file_list", "--symlink_info", "--extended_info", "--scan_dir", "--check_permission", "--hidden_file_info", # File_info options
     "--modify_file_permission", "--modify_file_content", "--modify_file_name", "--modify_file_metadata", "--modify_file_line", "--modify_file_symlink", "--modify_directory", "--modify_directory_permissions", "--modify_file_owner", # Modification options
-    "--detective",
+    "--detective", # Monitoring System
     
     # Other option
     "--compare --mode",
-    "--backup"
+    "--backup",
+
+    # Plugin
+    "--plugins", "--plugin", "list_plugins"
 ]

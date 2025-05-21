@@ -1,3 +1,5 @@
+# THIS IS MODULE, DO NOT RUN THIS FILE DIRECTLY
+
 import os
 import sys
 import hashlib
@@ -5,6 +7,7 @@ from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import threading
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from src.utils.getError import *
 
 # Known malware hashes
 KNOWN_MALWARE_HASHES = {
@@ -26,7 +29,11 @@ def get_file_hash(path: str, hash_type="sha256") -> str:
             while chunk := f.read(BUF_SIZE):
                 hash_func.update(chunk)
     except Exception as e:
-        print(f"Error: Cannot open file {path}: {e}")
+        handle_error(
+            error_type=ErrorContent.SCANNING_ERROR,
+            details={"file_path": path, "exception": str(e)},
+            reason=ErrorReason.FILE_NOT_FOUND
+        )
         return ""
 
     return hash_func.hexdigest()
@@ -40,7 +47,7 @@ def scan_file(path: Path, hash_type="sha256"):
         if file_hash in KNOWN_MALWARE_HASHES:
             with infected_lock:
                 infected_files.append(str(path))
-                print(f"❌ WARNING: {path} contains malware (hash matched)")
+                handle_error("WARNING", {path}, "contains malware (hash matched)")
         else:
             with safe_lock:
                 safe_files.append(str(path))
@@ -50,12 +57,12 @@ def scan_file(path: Path, hash_type="sha256"):
         for child in path.iterdir():
             scan_file(child, hash_type)
     else:
-        print(f"Invalid path: {path}")
+        handle_error(ErrorContent.SCANNING_ERROR, {path}, ErrorReason.MISSING_PATH)
 
 def scan_directory(root_path: str, hash_type="sha256"):
     path = Path(root_path)
     if not path.exists():
-        print("Path does not exist.")
+        handle_error(ErrorContent.READFILE_ERROR, {path}, ErrorReason.MISSING_FILE)
         return
 
     tasks = []
@@ -64,7 +71,7 @@ def scan_directory(root_path: str, hash_type="sha256"):
             tasks.append(executor.submit(scan_file, entry, hash_type))
 
         for task in as_completed(tasks):
-            pass  # Wait for all tasks
+            pass 
 
 def reset_results():
     with safe_lock, infected_lock:
@@ -74,7 +81,7 @@ def reset_results():
 def print_results():
     print("\n--- Scan Results ---")
 
-    print("\n❌ Infected files:")
+    print("\n\033[91m[!]\033[0m Infected files:")
     if not infected_files:
         print("  -> No malware found.")
     else:

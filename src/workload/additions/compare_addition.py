@@ -1,5 +1,8 @@
 import os
 import hashlib
+import sys
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "utils"))
+from src.utils.getError import *
 
 def hash_file(filepath):
     try:
@@ -25,5 +28,9 @@ def walk_dir(path):
                     "hash": hash_file(fullpath),
                 }
             except Exception as e:
-                print(f"[!] Error reading {fullpath}: {e}")
+                handle_error(
+                    ErrorContent.READFILE_ERROR,
+                    {"filepath": fullpath, "error": str(e)},
+                    ErrorReason
+                )
     return filemap
