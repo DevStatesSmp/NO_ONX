@@ -43,7 +43,7 @@
 
 # Install NO_ONX
 (Make sure that you have installed Python and Git)<br>
-Go to .../window-version/ and use this command:
+Go to folder containing NO_ONX file and use this command:
 ```bash
 pip install -r requirements.txt
 ```
