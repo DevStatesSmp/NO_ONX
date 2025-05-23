@@ -1,29 +1,51 @@
 # NO_ONX
-<a href="https://github.com/DevStatesSmp/NO_ONX">
-  <img title="NO_ONX - no content lol" src="https://github.com/user-attachments/assets/dd3b4b8d-ec74-429b-a629-2c1b1f3d6aac" width="200" alt="NO_ONX Logo" />
-</a>
-<br>
+**NO_ONX** is a lightweight yet powerful toolkit designed for **analysis**, **investigation**, and **security monitoring** on Windows systems. 
+<p align="center">
+  <a href="https://github.com/DevStatesSmp/NO_ONX-old">
+    <img src="https://github.com/user-attachments/assets/dd3b4b8d-ec74-429b-a629-2c1b1f3d6aac" width="200" alt="NO_ONX Logo" title="NO_ONX - Lightweight Security Tool" />
+  </a>
+</p>
 
-<a href="https://github.com/DevStatesSmp/NO_ONX/releases/tag/beta-v0.3.1">
-  <img src="https://img.shields.io/badge/NO_ONX-v0.3.1%20Beta-orange?style=flat-square" alt="NO_ONX latest release" title="NO_ONX latest release" />
-</a>
-<a href="https://github.com/DevStatesSmp/NO_ONX/blob/main/CHANGELOG.md">
-  <img src="https://img.shields.io/badge/Changelog-Click me!-blue?style=flat-square" alt="NO_ONX Changelog" title="NO_ONX Changelog" />
-</a>
+<p align="center">
+  <a href="https://github.com/DevStatesSmp/NO_ONX/releases/tag/beta-v0.3.1">
+    <img src="https://img.shields.io/badge/NO_ONX-v0.3.1%20Beta-orange?style=flat-square" alt="Latest Release" />
+  </a>
+  &nbsp;&nbsp;
+  <a href="https://t.me/+-hUpHRhvj9wyYmE1">
+    <img src="https://img.shields.io/badge/Telegram-Bug%20report%20and%20feedback-blue?style=flat-square" alt="Telegram" />
+  </a>
+  &nbsp;&nbsp;
+  <a href="https://github.com/DevStatesSmp/NO_ONX/blob/main/CHANGELOG.md">
+    <img src="https://img.shields.io/badge/Changelog-Click%20me!-red?style=flat-square" alt="Changelog" />
+  </a>
+</p>
 
-<br>
+<br/>
 
-NO_ONX is a lightweight tool but useful to analysis, investigattion, security monitoring for Window<br>
+# Requirements
 
-## Requirement
-- OS: Window 10+ (can be lower than Window 10)
-- Python: 3.1x
+- **Operating System**: Windows 7, 8, 10 or higher
+- **Python Version**: 3.1x
 
-## Install NO_ONX
+---
+
+# Supported Versions
+> **Last Updated:** May 22, 2025 (v0.3.1 beta)<br>
+
+## ✅ Currently Supported Version
+| Version         | Release Date       | Support Status     | Notes                                                      |
+|------------------|--------------------|---------------------|-------------------------------------------------------------|
+| `v0.3.x beta`    | 2025-05-16         | ![Support](https://img.shields.io/badge/support-active-brightgreen) | Latest release. Fixes all known bugs. Actively maintained |
+| `v0.2.9 beta`       | 2025-05-05       | ![Support](https://img.shields.io/badge/support-limited-yellow)        | First stable release. Support scheduled to end mid-June 2025.   |
+
+**⚠ Note: Versions below v0.2.9 beta will not be supported.**
+---
+
+# Install NO_ONX
 (Make sure that you have installed Python and Git)<br>
 Go to .../window-version/ and use this command:
 ```bash
-pip install -r requirement.txt # for window
+pip install -r requirements.txt
 ```
 
 Use git clone:
@@ -33,46 +55,6 @@ git clone https://github.com/DevStatesSmp/NO_ONX
 
 Or if you prefer to download a specific version manually, visit the [Releases page](https://github.com/DevStatesSmp/NO_ONX/releases) and download the latest version.
 
-## NO_ONX Command structure (until v0.3.0 Beta)
-NO_ONX <br>
-├── Main Options <br>
-│   ├── --help <br>
-│   ├── -h <br>
-│   ├── --system_info <br>
-│   ├── -si <br> 
-│   ├── --version<br>
-│   └── -v<br>
-│<br>
-├── File Information (::modify module)<br>
-│   ├── --readfile<br>
-│   ├── --file_info<br>
-│   ├── --file_hash<br>
-│   ├── --dir_info<br>
-│   ├── --file_list<br>
-│   ├── --symlink_info<br>
-│   ├── --extended_info<br>
-│   ├── --scan_dir<br>
-│   ├── --check_permission<br>
-│   └── --hidden_file_info<br>
-│<br>
-├── Modify (::modify module)<br>
-│   ├── --modify_file_permission<br>
-│   ├── --modify_file_content<br>
-│   ├── --modify_file_name<br>
-│   ├── --modify_file_metadata<br>
-│   ├── --modify_file_line<br>
-│   ├── --modify_file_symlink<br>
-│   ├── --modify_directory<br>
-│   ├── --modify_directory_permissions<br>
-│   └── --modify_file_owner<br>
-│<br>
-├── Monitoring System (Mainly detective)<br>
-│   ├── --detective --type<br>
-│        └── --watcher<br>
-│        └── --activity<br>
-│        └── --security<br>
-│        └── --network<br>
-│        └── --sys_health (or system_health)<br>
-├── Other<br>
-│   ├── --compare --mode<br>
-│   └── --backup<br>
+---
+
+Made with ❤️ by DevStatesSmp
