@@ -1,6 +1,4 @@
-# Usage:
-1. NO_ONX.exe <argument> <...>
-3. python src/[MODULE_NAME].py (<argument> <...>)
+# Usage: NO_ONX.exe <argument> <...>
 
 (Note: you can use python noonx.py <argument> <...> but not recommend to use because too complex and long)
 
