@@ -18,6 +18,10 @@
   <a href="https://github.com/DevStatesSmp/NO_ONX/blob/main/CHANGELOG.md">
     <img src="https://img.shields.io/badge/Changelog-Click%20me!-red?style=flat-square" alt="Changelog" />
   </a>
+  &nbsp;&nbsp;
+  <a href="https://github.com/DevStatesSmp/NO_ONX/blob/main/doc/DEV_GUIDE.md">
+    <img src="https://img.shields.io/badge/Developer%20Guide-Click%20me!-yellow?style=flat-square" alt="Developer Guide" />
+  </a>
 </p>
 
 <br/>
@@ -43,14 +47,13 @@
 
 # Install NO_ONX
 (Make sure that you have installed Python and Git)<br>
-Go to folder containing NO_ONX file and use this command:
-```bash
-pip install -r requirements.txt
-```
-
 Use git clone:
 ```bash
 git clone https://github.com/DevStatesSmp/NO_ONX
+```
+Go to folder containing NO_ONX file and use this command:
+```bash
+pip install -r requirements.txt
 ```
 
 Or if you prefer to download a specific version manually, visit the [Releases page](https://github.com/DevStatesSmp/NO_ONX/releases) and download the latest version.
