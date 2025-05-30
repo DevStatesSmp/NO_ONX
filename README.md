@@ -15,7 +15,7 @@
     <img src="https://img.shields.io/badge/Telegram-Bug%20report%20and%20feedback-blue?style=flat-square" alt="Telegram" />
   </a>
   &nbsp;&nbsp;
-  <a href="https://github.com/DevStatesSmp/NNX-Plugin-Store">
+  <a href="https://devstatessmp.github.io/NNX-Plugin-Store/">
     <img src="https://img.shields.io/badge/NNX%20Plugin%20Store-Official%20Plugin%20Store-gray?style=flat-square" alt="Changelog" />
   </a>
   &nbsp;&nbsp;
