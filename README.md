@@ -15,6 +15,10 @@
     <img src="https://img.shields.io/badge/Telegram-Bug%20report%20and%20feedback-blue?style=flat-square" alt="Telegram" />
   </a>
   &nbsp;&nbsp;
+  <a href="https://github.com/DevStatesSmp/NNX-Plugin-Store">
+    <img src="https://img.shields.io/badge/NNX%20Plugin%20Store-Official%20Plugin%20Store-gray?style=flat-square" alt="Changelog" />
+  </a>
+  &nbsp;&nbsp;
   <a href="https://github.com/DevStatesSmp/NO_ONX/blob/main/CHANGELOG.md">
     <img src="https://img.shields.io/badge/Changelog-Click%20me!-red?style=flat-square" alt="Changelog" />
   </a>
@@ -27,7 +31,6 @@
     <img src="https://img.shields.io/badge/NO_ONX%20Wiki-Click%20me!-yellow?style=flat-square" alt="Developer Guide" />
   </a>
 </p>
-
 <br/>
 
 # Requirements
