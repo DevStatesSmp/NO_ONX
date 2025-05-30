@@ -18,6 +18,10 @@
   <a href="https://github.com/DevStatesSmp/NO_ONX/blob/main/CHANGELOG.md">
     <img src="https://img.shields.io/badge/Changelog-Click%20me!-red?style=flat-square" alt="Changelog" />
   </a>
+    &nbsp;&nbsp;
+  <a href="https://github.com/DevStatesSmp/NO_ONX/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/DevStatesSmp/NO_ONX?style=flat-square" alt="License" />
+  </a>
   &nbsp;&nbsp;
   <a href="https://github.com/DevStatesSmp/NO_ONX/wiki">
     <img src="https://img.shields.io/badge/NO_ONX%20Wiki-Click%20me!-yellow?style=flat-square" alt="Developer Guide" />
