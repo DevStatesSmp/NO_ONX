@@ -5,7 +5,7 @@
 ## [v0.3.1 Beta] - 2025-05-21
 ### Expirement:
 - v0.3.1.2exp: No inform
-- v0.3.1.1exp (Telegram): Added Sandbox (unstable and not working for malware analysis), new NNX prompt and add NNX private, finally add config and fix some bug
+- v0.3.1.1exp (Telegram version), 2025-05-30: Added Sandbox (unstable and not working for malware analysis), new NNX prompt and add NNX private, finally add config and fix some bug
 ### Added
 - Add plugin, allowing you to add your own commands
 - Add new two commands
@@ -25,7 +25,7 @@
 - Fix not display error
   
 ## [v0.2.9 Beta] - 2025-05-05
-### Expirement v0.2.10exp: 
+### Expirement v0.2.10exp (Telegram version): 
 Added Detective (which from Linux version and not fully) and fix somebug
 
 ### Added
