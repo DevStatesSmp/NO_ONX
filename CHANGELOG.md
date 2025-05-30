@@ -2,6 +2,22 @@
 > 🪟 Since **v0.2.4 Beta**, NO_ONX officially supports **Windows only**. Linux support has been **discontinued**.
 
 ---
+## [V0.3.2 Beta] (Plan) - 2025-07-xx
+### Added
+- New [NNX Plugin Store](https://github.com/DevStatesSmp/NNX-Plugin-Store)
+- New NNX Prompt and NNX Private
+- Sandbox (Also add default profile) and 2-3 Detective commands
+- ... (still development)
+
+### Changed
+- config.py will be a folder, include settings, feature,...
+- ... (still development)
+
+### Fixed
+- Fixed bug when input the wrong command or the command has an error, you will be kicked out of cmd.
+- Improved stability and performance
+- Fix some bug (again lol)
+ 
 ## [v0.3.1 Beta] - 2025-05-21
 ### Experiment:
 - v0.3.1.2exp: No inform
