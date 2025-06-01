@@ -4,7 +4,7 @@
 ---
 ## [V0.3.2 Beta] (Plan) - 2025-07-xx
 ### Added
-- New [NNX Plugin Store](https://github.com/DevStatesSmp/NNX-Plugin-Store)
+- New [NNX Plugin Store](https://devstatessmp.github.io/NNX-Plugin-Store/)
 - New NNX Prompt and NNX Private
 - Sandbox (Also add default profile) and 2-3 Detective commands
 - ... (still development)
