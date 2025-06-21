@@ -47,9 +47,9 @@
 | Version         | Release Date       | Support Status     | Notes                                                      |
 |------------------|--------------------|---------------------|-------------------------------------------------------------|
 | `v0.3.x beta`    | [2025-05-16](https://github.com/DevStatesSmp/NO_ONX/releases/tag/beta-v0.3.1)         | ![Support](https://img.shields.io/badge/support-active-brightgreen) | Latest release. Fixes all known bugs. Actively maintained |
-| `v0.2.9 beta`       | [2025-05-05](https://github.com/DevStatesSmp/NO_ONX/releases/tag/beta-v0.2.9)       | ![Support](https://img.shields.io/badge/support-limited-yellow)        | First stable release. Support scheduled to end mid-June 2025.   |
+| `v0.2.9 beta`       | [2025-05-05](https://github.com/DevStatesSmp/NO_ONX/releases/tag/beta-v0.2.9)       | ![Support](https://img.shields.io/badge/support-Outdate-red)        | First stable release. Stop support on 21 June 2025.   |
 
-**⚠ Note: Versions below v0.2.9 beta will not be supported.**
+**⚠ Note: Versions below v0.3.x beta will not be supported.**
 ---
 
 # Install NO_ONX
