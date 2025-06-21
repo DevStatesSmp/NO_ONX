@@ -20,7 +20,7 @@
  
 ## [v0.3.1 Beta] - 2025-05-21
 ### Experiment:
-- v0.3.1.2exp: No inform
+- v0.3.1.2exp (Telegram version), 2025-06-21: Fix some bug, improve sandbox command and NNX Prompt, NNX Private
 - v0.3.1.1exp (Telegram version), 2025-05-30: Added Sandbox (unstable and not working for malware analysis), new NNX prompt and add NNX private, finally add config and fix some bug
 ### Added
 - Add plugin, allowing you to add your own commands
