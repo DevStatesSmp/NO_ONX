@@ -15,10 +15,6 @@
     <img src="https://img.shields.io/badge/Telegram-Bug%20report%20and%20feedback-blue?style=flat-square" alt="Telegram" />
   </a>
   &nbsp;&nbsp;
-  <a href="https://devstatessmp.github.io/NNX-Plugin-Store/">
-    <img src="https://img.shields.io/badge/NNX%20Plugin%20Store-Official%20Plugin%20Store-gray?style=flat-square" alt="Changelog" />
-  </a>
-  &nbsp;&nbsp;
   <a href="https://github.com/DevStatesSmp/NO_ONX/blob/main/CHANGELOG.md">
     <img src="https://img.shields.io/badge/Changelog-Click%20me!-red?style=flat-square" alt="Changelog" />
   </a>
@@ -35,7 +31,7 @@
 
 # Requirements
 
-- **Operating System**: Windows 7, 8, 10 or higher
+- **Operating System**: Windows 7+
 - **Python Version**: 3.1x
 
 ---
