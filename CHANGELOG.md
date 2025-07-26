@@ -4,8 +4,7 @@
 ---
 ## [V0.3.2 Beta] - 2025-07-26
 ### Added
-- Add Sandbox command and profile (only work for NNX Private)
-- Add monitoring anomaly process (2 command)
+Add Sandbox command and profile (only work for NNX Private)
 
 ### Changed
 - config.py split into folder
