@@ -11,8 +11,8 @@
     <img src="https://img.shields.io/badge/NO_ONX-v0.3.1%20Beta-orange?style=flat-square" alt="Latest Release" />
   </a>
   &nbsp;&nbsp;
-  <a href="https://t.me/+-hUpHRhvj9wyYmE1">
-    <img src="https://img.shields.io/badge/Telegram-Bug%20report%20and%20feedback-blue?style=flat-square" alt="Telegram" />
+  <a href="https://github.com/DevStatesSmp/NO_ONX/wiki/Commands-Guide">
+    <img src="https://img.shields.io/badge/Command%20Guide-Click%20me!-blue?style=flat-square" alt="Telegram" />
   </a>
   &nbsp;&nbsp;
   <a href="https://github.com/DevStatesSmp/NO_ONX/blob/main/CHANGELOG.md">
