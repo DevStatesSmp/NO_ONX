@@ -1,4 +1,6 @@
-# Usage: NO_ONX.exe <argument> <...>
+# Usage:
+1. NO_ONX.exe <argument> <...>
+3. python src/[MODULE_NAME].py (<argument> <...>)
 
 (Note: you can use python noonx.py <argument> <...> but not recommend to use because too complex and long)
 
@@ -164,18 +166,23 @@
       ```
 ---
 
-## 7. **Monitoring System**
-- **--detective <detective_type> (path if needed)**: Monitoring system, activity and security
+## 7. **Monitoring System** (Recommend to run as adminstrator)
+- **--detective --type <detective_type> (path if needed)**: Monitoring system, activity and security
     - **Usage**:
       ```bash
       nnx --detective --type watcher /path/to/directory
-      nnx --detective --process_watcher
-      nnx --detective --process # Recommed to run as administrator
+      nnx --detective --type process_watcher # RUN POWERSHELL AS ADMINISTRATOR
+      nnx --detective --type process # RUN POWERSHELL AS ADMINISTRATOR
       nnx --detective --type sys_health # or system_health
       nnx --detective --type activity # RUN POWERSHELL AS ADMINISTRATOR
       nnx --detective --type security # RUN POWERSHELL AS ADMINISTRATOR
       nnx --detective --type network # RUN POWERSHELL AS ADMINISTRATOR
       ```
+- **--sandbox --profile <profile_name> --file [target_file]**: Isolated Testing
+    - **Usage**:
+    ```bash
+    nnx --sandbox --profile <profile_name> --file /path/to/file
+    ```
 ---
 
 ## Notes:

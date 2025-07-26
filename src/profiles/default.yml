@@ -1,0 +1,8 @@
+name: "NNX Sandbox"
+description: "Default NNX sandbox profile"
+version: "1.0"
+timeout: 30
+network: false
+readonly: true
+record: true
+intercept: [open, connect, execve]

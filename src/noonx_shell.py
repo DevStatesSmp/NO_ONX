@@ -3,9 +3,13 @@ import subprocess
 import sys
 import socket
 import traceback
+import json
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from src.utils.config import INTERNAL_COMMANDS, NOONX_COMMANDS, FEATURE, SETTINGS, get_prompt
+from src.config.CONFIG import SETTINGS, FEATURE
+from src.config.NNX_PROMPT import get_prompt
+from src.config.NNX_COMMAND import NOONX_COMMANDS, INTERNAL_COMMANDS
 from src.utils.getError import *
+from src.workload.nnx_private import run_private_shell
 
 if getattr(sys, 'frozen', False):
     app_path = sys._MEIPASS
@@ -30,6 +34,14 @@ def no_onx_shell():
 
             if cmd.lower() in ["exit", "quit"]:
                 break
+
+            if cmd.lower() == "private":
+                if SETTINGS.get("NNX_SHELL"):
+                    run_private_shell()
+                    continue
+                else:
+                    handle_error(ErrorContent.WHEN_RUNNING_ERROR, "The NO_ONX Shell have been disabled,To use it, set 'NNX_Shell' to 'True' in the configuration.\n", to_stderr=True, exit_code=None)
+                    continue
 
             base_cmd = cmd.split()[0]
             args = cmd[len(base_cmd):].strip()
@@ -60,11 +72,13 @@ def no_onx_shell():
                             traceback.print_exc()
                     else:
                         handle_error(ErrorContent.UNSUPPORTEDCOMMAND_ERROR, {cmd}, ErrorReason.UNSUPPORTED_COMMAND, to_stderr=True, exit_code=None)
+                        continue
                 else:
-
                     handle_error(ErrorContent.MISSING_ARGUMENTS_ERROR, {cmd}, ErrorReason.MISSING_ARGUMENTS_NNX, to_stderr=True, exit_code=None)
+                    continue
             else:
                 handle_error(ErrorContent.UNSUPPORTEDCOMMAND_ERROR, {cmd}, ErrorReason.UNSUPPORTED_COMMAND, to_stderr=True, exit_code=None)
+                continue
 
         except KeyboardInterrupt:
             print("\nUse 'exit' to quit.")
@@ -72,9 +86,9 @@ def no_onx_shell():
             print(f"\033[91m[!]\033[0m {e}")
             traceback.print_exc()
 
-if __name__ == '__main__' and SETTINGS["NNX_SHELL"]:
-    no_onx_shell()
+if __name__ == '__main__' and SETTINGS.get("NNX_SHELL", True):
+        no_onx_shell()
 
 else:
     if __name__ == '__main__':
-        print("\033[91m[!] The NO_ONX Shell have been disabled,\033[0m To use it, set 'NNX_Shell' to 'True' in the configuration.\n", file=sys.stderr)
+        handle_error(ErrorContent.WHEN_RUNNING_ERROR, "The NO_ONX Shell have been disabled,To use it, set 'NNX_Shell' to 'True' in the configuration.\n", to_stderr=True, exit_code=None)

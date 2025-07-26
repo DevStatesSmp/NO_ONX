@@ -216,7 +216,12 @@ def help_monitoring():
            security (RUN AS ADMINISTRATOR)
            process (RECOMMEND TO RUN AS ADMINISTRATOR)
            network (RECOMMEND TO RUN AS ADMINISTRATOR)
-          sys_health (system_health) 
+          sys_health (system_health)
+
+  \033[96m--sandboxz\033[0m --profile <profile_name> --file <path>                       - Sandboxing System for testing files
+      \033[93mArguments:\033[0m
+          <profile_name> - Name of the sandbox profile
+          <path> - Path to the file or directory to be tested
 """)
     
 def help_modify():

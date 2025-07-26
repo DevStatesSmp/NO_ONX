@@ -15,15 +15,17 @@ except ImportError:
     handle_error(ErrorContent.WHEN_RUNNING_ERROR, "rarfile", ErrorReason.LIB_NOT_FOUND, "Please install it using 'pip install rarfile'.")
     exit(1)
 
-PLUGIN_STORE_URL = "https://raw.githubusercontent.com/DevStatesSmp/NNX-Plugin-Store/main/plugins.json"
-print(f"Plugin Store URL: {PLUGIN_STORE_URL}")
+# Plugin Store is cancelled, you should wait a new update or use old way.
+PLUGIN_STORE_URL = "https://raw.githubusercontent.com/DevStatesSmp/NNX-Plugin-Store/main/plugins.json" # Change this URL to your plugin store URL
 DOWNLOAD_FOLDER = r"src\plugins"
 
 def fetch_plugin_store(url):
     try:
         r = requests.get(url)
         r.raise_for_status()
-        return r.json()
+        data = r.json()
+        print(f"[DEBUG] Fetched plugin store data: {data}")
+        return data
     except Exception as e:
         handle_error(ErrorContent.WHEN_RUNNING_ERROR, "NNX Plugin Store", ErrorReason.NETWORK_ERROR)
         return None
@@ -106,8 +108,9 @@ def extract_rar(filepath, extract_to):
 
 def plugin_install():
     store = fetch_plugin_store(PLUGIN_STORE_URL)
-        
+    print(store)
     if not store:
+        print("[PLUGINS] Could not load plugin store.")
         return
 
     plugins = store.get("plugins", [])
@@ -197,6 +200,4 @@ def list_plugins_with_id(plugin_folder):
                 plugins.append((foldername, "", "No plugin.json found"))
     return plugins
 
-for folder, pid, pname in list_plugins_with_id(PLUGIN_FOLDER):
-    print(f"Folder: {folder}, ID: {pid}, Name: {pname}")
         

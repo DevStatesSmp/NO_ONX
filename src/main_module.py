@@ -3,77 +3,79 @@
 import sys
 
 # Import source
+# Plugins
+from .plugins.init import load_plugins, get_plugin, list_plugins, ask_use_plugin
+from .plugins.plugins_manager import plugin_install, plugin_uninstall
 ## Utils
 from .utils.help_module import *
-from .utils.system_info_module import get_system_info, get_gpu_info
+from .utils.system_info_module import get_system_info
 from .utils.banner_module import banner, version
 from .utils.loading_effect import loading_effect
-from .utils.config import FEATURE
-from .utils.getError import *
+from .utils.getError import handle_error, ErrorContent, ErrorReason
 # Workload
+from .config.CONFIG import FEATURE
 from .workload.compare_module import deep_compare_dirs, simple_compare_dirs
 from .workload.modification_module import mod
 from .workload import file_scan_module
 from .workload.file_info_module import info, check_permission, hidden_file_info, file_list
 from .workload.backup_module import *
+from .workload.nnx_private import run_private_shell
 from .workload.readfile_module import read_binary_file, read_text_file, validate_file_path
 from .workload.detective_module import watch_detective, activity_detective, monitor_user_activity, network_detective, system_health, process_detective, process_watcher
-
+from .workload.sandbox import sandbox_runner, profile_loader
 
 # ==== Main ====
 def main():
-    # Plugin management
-    from .plugins.init import load_plugins, get_plugin, list_plugins, ask_use_plugin
-    load_plugins()
-
-
     # Sys args
     if len(sys.argv) >= 2:
         arg = sys.argv[1]
 
         # Plugins
-        if arg == "--plugins" :
-            print("[PLUGINS] Available Plugins:")
-            for p in list_plugins():
-                print(f" - {p}")
-            return
+        if arg.startswith('--plugin') or arg.startswith('-p'):
+            if not FEATURE.get("DISABLE_PLUGIN", False):
+                handle_error(ErrorContent.PLUGIN_ERROR, "Plugin are disabled, please enable it in configuration")
+                return
+            
+            load_plugins()
 
-        if arg == "--plugin":
-            if len(sys.argv) < 3:
-                print("Please specify plugin name")
-                return
-            plugin_name = sys.argv[2]
-            plugin_args = sys.argv[3:]
-            plugin = get_plugin(plugin_name)
-            if not plugin:
-                print(f"[!] Plugin '{plugin_name}' not found")
-                return
-            if hasattr(plugin, 'execute'):
-                if ask_use_plugin(plugin_name):
-                    plugin.execute(plugin_args)
-                else:
+            if arg in ("--plugin_list", "-list"):
+                plugins = list_plugins()
+
+            elif arg in ("--plugin", "-p"):
+                if len(sys.argv) < 3:
+                    print("Please specify plugin name")
+                    print("Usage: --plugin <plugin_name> [args...]")
                     return
-            else:
-                handle_error("Error when loading plugins", {plugin_name}, "Has no execute() function.")
-            return
+                plugin_name = sys.argv[2]
+                plugin_args = sys.argv[3:]
 
-        if arg == '--list_plugins':
-            plugins = list_plugins()
-            print("[PLUGINS] Available Plugins:")
-            for p in plugins:
-                print(f" - {p}")
-            return
-
-
+                plugin = get_plugin(plugin_name)
+                if not plugin:
+                    handle_error(ErrorContent.PLUGIN_ERROR, {plugin_name}, ErrorReason.PLUGIN_NOT_FOUND)
+                    return
+                
+                if hasattr(plugin, 'execute'):
+                    if ask_use_plugin(plugin_name):
+                        plugin.execute(plugin_args)
+                    else:
+                        return
+                else:    
+                    handle_error("Error when loading plugins", {plugin_name}, "Plugin has no execute() function.")
+                    return
+            
         # Run NO_ONX Shell
-        if arg in ('--shell', '-s'):
+        elif arg in ('--shell', '-s'):
+            type = sys.argv[2] if len(sys.argv) > 2 else None
             loading_effect("preparing NO_ONX Shell...")
             from .noonx_shell import no_onx_shell
-            no_onx_shell()
+            if type == 'private':
+                run_private_shell()
+            else:
+                no_onx_shell()
             return
 
         # Main argument for noonx.py
-        if arg in ('--help', '-h'):
+        elif arg in ('--help', '-h'):
             if len(sys.argv) > 2:
                 sub_arg = sys.argv[2]
                 if sub_arg == 'compare':
@@ -355,8 +357,45 @@ def main():
             else:
                 handle_error(ErrorContent.MISSING_TYPE_COMMAND, {detective_type}, ErrorReason.MISSING_TYPE), print("Use 'watcher', 'activity', 'security', 'network', or 'sys_health'.")
         
-        # Added you custom command here
-        # Ex: elif len(sys.argv) >= 2 and sys.argv[1] == '--example':
+        elif '--sandbox' in sys.argv:
+            loading_effect("Loading NNX Sandbox...")
+
+            def get_arg_value(flag):
+                try:
+                    index = sys.argv.index(flag)
+                    return sys.argv[index + 1]
+                except (ValueError, IndexError):
+                    return None
+
+            profile_name = get_arg_value('--profile')
+            target_file = get_arg_value('--file')
+
+            if not profile_name or not target_file:
+                handle_error(ErrorContent.MISSING_ARGUMENTS_ERROR, ErrorReason.MISSING_ARGUMENTS)
+                print("\nUsage: --sandbox --profile [profile_name] --file [target_file]", file=sys.stderr)
+                return
+
+            # Load sandbox profile
+            try:
+                profile = profile_loader.load(profile_name)
+                if not profile:
+                    raise FileNotFoundError
+            except FileNotFoundError:
+                handle_error(ErrorContent.PROFILE_ERROR, {profile_name}, ErrorReason.PROFILE_NOT_FOUND)
+                return
+
+            result = sandbox_runner.execute(target_file=target_file, config=profile)
+
+            if result:
+                print(f"[Return Code]: {result.get('returncode', 'N/A')}")
+                if result.get('stdout'):
+                    print("\n[STDOUT]:")
+                    print(result['stdout'])
+                if result.get('stderr'):
+                    print("\n[STDERR]:", file=sys.stderr)
+                    print(result['stderr'], file=sys.stderr)
+            else:
+                print("No result returned from sandbox execution.")
         
         else:
             handle_error(ErrorContent.UNSUPPORTEDCOMMAND_ERROR, sys.argv[1] if len(sys.argv) > 1 else None, ErrorReason.UNSUPPORTED_COMMAND)

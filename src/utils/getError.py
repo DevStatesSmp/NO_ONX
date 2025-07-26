@@ -38,6 +38,7 @@ class ErrorContent:
     COMMAND_EXECUTION_ERROR = "Error during command execution"
     INVALID_IP = "Invalid IP address"
     LOADING = "Error when loading command"
+    PROFILE_ERROR = "Error when loading profile"
 
 class ErrorReason:
     # Invalid reasons
@@ -55,6 +56,9 @@ class ErrorReason:
     PATH_NOT_EXISTS = "Path does not exists."
     PATH_NOT_FOUND = "Path not found."
     FILE_NOT_FOUND = "File not found."
+    PLUGIN_NOT_FOUND = "Plugin not found."
+    PROFILE_NOT_FOUND = "Profile not found."
+    LIB_NOT_FOUND = "Library not found."
     PERMISSION_DENIED = "Permission denied."
     ACCESS_DENIED = "Access denied."
 
@@ -67,6 +71,7 @@ class ErrorReason:
     NOT_DIREC_ERROR = "The specified path is not a directory."
     VALUE_ERROR = "Invalid value."
     COMMAND_ERROR = "Invalid command."
+    NETWORK_ERROR = "Network error, please check your connection."
 
     # Cannot reason
     CANNOT_MOVE_FILE = "Cannot move file."
@@ -111,7 +116,7 @@ def handle_error(content: str, value=None, reason: Optional[str] = None, to_stde
     if reason:
         message_parts.append(str(reason))
     if len(message_parts) > 1:
-        message = ": ".join(message_parts[:2])
+        message = "\033[91m:\033[0m ".join(message_parts[:2])
         if len(message_parts) > 2:
             message += f", {', '.join(message_parts[2:])}"
     else:

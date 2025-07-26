@@ -3,3 +3,4 @@ pywin32
 tabulate
 wim
 colorama
+rarfile

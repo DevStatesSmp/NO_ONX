@@ -1,0 +1,7 @@
+name: "Network Allowed"
+description: "Network enabled NNX sandbox profile"
+timeout: 120
+network: true
+readonly: true
+record: true
+intercept: [open, connect, sendto, recvfrom]

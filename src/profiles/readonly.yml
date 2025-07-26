@@ -1,0 +1,7 @@
+name: "Read-Only FS"
+description: "A profile that restricts the filesystem to read-only access, allowing only network operations and specific system calls."
+timeout: 45
+network: true
+readonly: true
+record: true
+intercept: [open, connect, execve, unlink]

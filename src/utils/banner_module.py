@@ -1,5 +1,6 @@
 import shutil
-from src.utils.config import SETTINGS
+# from src.utils.config import SETTINGS
+from src.config.CONFIG import SETTINGS
 import platform
 
 def version():

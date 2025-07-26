@@ -1,0 +1,11 @@
+{
+    "ENABLE_EXPERIMENTAL_COMMANDS": false,
+    "ENABLE_DIRECT_RUN": false,
+    "DISABLE_AUTO_UPDATE": false,
+    "ENABLE_INTERNAL_COMMANDS": false,
+    "ENABLE_NNX_COMMANDS": true,
+    "TEST": false,
+    "HIDDEN_BANNER": false,
+    "DISABLE_LOADING": false,
+    "DISABLE_PLUGIN": true
+}

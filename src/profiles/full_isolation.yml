@@ -1,0 +1,14 @@
+name: "Full Isolation"
+description: "Full isolation NNX sandbox profile"
+version: "1.0"
+timeout: 60
+network: false
+readonly: true
+record: true
+intercept: [open, connect, execve, unlink, mkdir, ptrace]
+extra_env: { LANG: "C" }
+mounts:
+  - "/tmp:/tmp:rw"
+firejail_profile:
+  enable: true
+  file: "full_isolation.profile"

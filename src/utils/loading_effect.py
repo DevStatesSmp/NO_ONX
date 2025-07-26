@@ -1,5 +1,5 @@
 import time
-from .config import FEATURE
+from src.config.CONFIG import FEATURE
 from .getError import *
 
 try:
