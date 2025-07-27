@@ -2,7 +2,16 @@
 > :window: Since **v0.2.4 Beta**, NO_ONX officially supports **Windows only**. Linux support has been **discontinued**.
 
 ---
-## [V0.3.2 Beta] - 2025-07-26
+## [v0.3.3 Beta] (Plan) - 2025-08-0x
+### Fixed
+- Code optimization
+- Enhanced terminal
+- ...
+### Remove
+- remove some annoying loading code lines
+(...)
+
+## [v0.3.2 Beta] - 2025-07-26
 ### Added
 Add Sandbox command and profile (only work for NNX Private)
 
