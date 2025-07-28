@@ -86,8 +86,6 @@ Added Detective (which from Linux version and not fully) and fix somebug
 
 (Note: CMD Shell is still under testing but available in the Windows version)
 
----
-
 ## [v0.1.2 Beta] - 2025-04-14 (Old Repository)
 ### Added
 - Several commands from `NO_ONX::modify` module.
@@ -96,7 +94,6 @@ Added Detective (which from Linux version and not fully) and fix somebug
 ### Fixed
 - Minor bugs related to file operations.
 
----
 
 ## [v0.0.5 Beta] - 2025-04-12 (Old Repository)
 ### Fixed
