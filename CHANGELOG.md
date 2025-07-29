@@ -1,5 +1,11 @@
 # Changelog
 > :window: Since **v0.2.4 Beta**, NO_ONX officially supports **Windows only**. Linux support has been **discontinued**.
+> 
+<p align="center">
+  <a href="https://github.com/DevStatesSmp/NO_ONX-old">
+    <img src="https://github.com/user-attachments/assets/a5b967f8-bc49-464a-8f89-787f6c972886" width="200" alt="NO_ONX Shell" title="NO_ONX - Lightweight Security Tool" />
+  </a>
+</p>
 
 ---
 ## [v0.3.3 Beta] - 2025-08-04
