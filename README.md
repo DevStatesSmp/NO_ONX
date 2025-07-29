@@ -7,8 +7,8 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/DevStatesSmp/NO_ONX/releases/tag/beta-v0.3.2">
-    <img src="https://img.shields.io/badge/NO_ONX-v0.3.2%20Beta-orange?style=flat-square" alt="Latest Release" />
+  <a href="https://github.com/DevStatesSmp/NO_ONX/releases/tag/beta-v0.3.3">
+    <img src="https://img.shields.io/badge/NO_ONX-v0.3.3%20Beta-orange?style=flat-square" alt="Latest Release" />
   </a>
   &nbsp;&nbsp;
   <a href="https://github.com/DevStatesSmp/NO_ONX/wiki/Commands-Guide">
