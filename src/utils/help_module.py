@@ -138,15 +138,37 @@ def help():
 
        <option>:
            watcher <path>
-           process_watcher
+           process_watcher (RECOMMEND TO RUN AS ADMINISTRATOR)
            activity (RUN AS ADMINISTRATOR)
            security (RUN AS ADMINISTRATOR)
            process (RECOMMEND TO RUN AS ADMINISTRATOR)
            network (RECOMMEND TO RUN AS ADMINISTRATOR)
-          sys_health (system_health)
+           system_health (RECOMMEND TO RUN AS ADMINISTRATOR) 
+
+\033[94mSandbox commands:\033[0m ONLY FOR NNX PRIVATE
+  \033[96m--sandbox\033[0m --profile <profile_name> --file <path>                       - Isolated Testing
+      \033[93mArguments:\033[0m
+          <profile_name> - default, full_isolation, network_enable, readonly, or custom
+          <path> - Path to the file to be tested
 """)
     
 # Options
+def help_sandbox():
+    print("""
+\033[94mUsage:\033[0m
+  \033[92m1.\033[0m nnx <argument> [...]
+          
+\033[94mOptions:\033[0m
+  \033[93m--version\033[0m (-v)           - Show version information
+  \033[93m--help\033[0m (-h)              - Show help
+  \033[93m--system_info\033[0m (-si)      - Show system information              
+
+\033[94mSandbox commands:\033[0m ONLY FOR NNX PRIVATE
+  \033[96m--sandbox\033[0m --profile <profile_name>--file /path/to/file                       - Isolated Testing
+      \033[93mArguments:\033[0m
+          <profile_name> - default, full_isolation, network_enable, readonly, or custom
+          <path> - Path to the file to be tested
+""")
 
 def help_compare():
     print("""
@@ -211,12 +233,12 @@ def help_monitoring():
 
        <option>:
            watcher <path>
-           process_watcher
+           process_watcher (RECOMMEND TO RUN AS ADMINISTRATOR)
            activity (RUN AS ADMINISTRATOR)
            security (RUN AS ADMINISTRATOR)
            process (RECOMMEND TO RUN AS ADMINISTRATOR)
            network (RECOMMEND TO RUN AS ADMINISTRATOR)
-          sys_health (system_health)
+           system_health (RECOMMEND TO RUN AS ADMINISTRATOR)
 
   \033[96m--sandboxz\033[0m --profile <profile_name> --file <path>                       - Sandboxing System for testing files
       \033[93mArguments:\033[0m

@@ -5,7 +5,7 @@ a = Analysis(
     ['src\\noonx_shell.py'],
     pathex=[],
     binaries=[],
-    datas=[('src\\config\\SETTING.json', 'src\\config'), ('src\\config\\FEATURE.json', 'src\\config'), ('src\\plugins', 'src\\plugins')],
+    datas=[('src\\config\\SETTING.json', 'src\\config'), ('src\\config\\FEATURE.json', 'src\\config')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
@@ -35,5 +35,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=['D:\\noonx\\noonx.ico'],
+    icon=['D:\\noonx\\noonx-terminal.ico'],
 )

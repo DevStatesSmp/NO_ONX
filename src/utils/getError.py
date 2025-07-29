@@ -39,7 +39,9 @@ class ErrorContent:
     INVALID_IP = "Invalid IP address"
     LOADING = "Error when loading command"
     PROFILE_ERROR = "Error when loading profile"
-
+    
+    LOAD_AVERAGE = "Error when loading system load average"
+    TEMPERATURE_SENSOR = "Error when loading temperature sensor"
 class ErrorReason:
     # Invalid reasons
     INVALID_TYPE = "Invalid type." # This is also the operation too
@@ -90,6 +92,8 @@ class ErrorReason:
 
     # FAILED reason
     FAILED_LOADPLUGIN = "Failed to load init"
+
+    NOT_SUPPORTED = "This feature still developed."
 
 
 def handle_error(content: str, value=None, reason: Optional[str] = None, to_stderr: bool = False, exit_code: int = 1) -> None:

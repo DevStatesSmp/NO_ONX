@@ -68,31 +68,32 @@ def main():
             type = sys.argv[2] if len(sys.argv) > 2 else None
             loading_effect("preparing NO_ONX Shell...")
             from .noonx_shell import no_onx_shell
-            if type == 'private':
-                run_private_shell()
+            shell_map = {
+                'default': no_onx_shell,
+                'private': run_private_shell
+            }
+            action = shell_map.get(type, no_onx_shell)
+            if action:
+                action()
             else:
-                no_onx_shell()
-            return
+                handle_error(ErrorContent.MISSING_TYPE_COMMAND, {type}, ErrorReason.INVALID_TYPE)
+                print("Use default NNX Shell or 'private' as type.")
+                return
 
         # Main argument for noonx.py
         elif arg in ('--help', '-h'):
-            if len(sys.argv) > 2:
-                sub_arg = sys.argv[2]
-                if sub_arg == 'compare':
-                    help_compare()
-                elif sub_arg == 'backup':
-                    help_backup()
-                elif sub_arg == 'monitoring':
-                    help_monitoring()
-                elif sub_arg == 'modify':
-                    help_modify()
-                elif sub_arg == 'fileinfo':
-                    help_fileinfo()
-                else:
-                    loading_effect("Loading help...")
-                    help()
+            sub_arg = sys.argv[2] if len(sys.argv) > 2 else None
+            help_map = {
+            'compare': help_compare,
+            'backup': help_backup,
+            'monitoring': help_monitoring,
+            'modify': help_modify,
+            'fileinfo': help_fileinfo,
+            'sandbox': help_sandbox,
+            }
+            if sub_arg and sub_arg in help_map:
+                help_map[sub_arg]()
             else:
-                loading_effect("Loading help...")
                 help()
 
         elif arg in ('--system_info', '-si'):
@@ -146,10 +147,13 @@ def main():
             file_path = sys.argv[3]
             if not validate_file_path(file_path):
                 return
-            if file_type == 'text':
-                read_text_file(file_path)
-            elif file_type == 'binary':
-                read_binary_file(file_path)
+            readfile_map = {
+                'text': lambda: read_text_file(file_path),
+                'binary': read_binary_file(file_path)
+            }
+            action = readfile_map.get(file_type)
+            if action:
+                action()
             else:
                 handle_error(ErrorContent.MISSING_TYPE_COMMAND, {file_type}, ErrorReason.INVALID_TYPE), print("Use 'text' or 'binary'")
                 return
@@ -233,9 +237,16 @@ def main():
             compare_type = sys.argv[3]
             path1 = sys.argv[4]
             path2 = sys.argv[5]
-    
-            if compare_type == 'deep':
-                loading_effect(f"Deep comparing {path1} and {path2}")
+
+            def simple_compare_result(path1, path2):
+                result = simple_compare_dirs(path1, path2)
+                if result:
+                    for res in result:
+                        print(res)
+                else:
+                    print("No differences found.")
+
+            def deep_compare_result(path1, path2):
                 identical_files, different_files, only_in_dir1, only_in_dir2, diff_files, table_data = deep_compare_dirs(path1, path2)
                 print(f"Identical files: {identical_files}")
                 print(f"Different files: {different_files}")
@@ -248,16 +259,20 @@ def main():
 
                 for row in table_data:
                     print(f"{row[0]}: {row[1]} - {row[2]}")
-        
-            elif compare_type == 'simple':
-                loading_effect(f"Simple comparing {path1} and {path2}")
 
-                result = simple_compare_dirs(path1, path2)
-                if result:
-                    for res in result:
-                        print(res)
-                else:
-                    print("No differences found.")
+            compare_map = {
+                'deep': lambda: (
+                    loading_effect(f"Deep comparing {path1} and {path2}"),
+                    deep_compare_result(path1, path2)
+                ),
+                'simple': lambda: (
+                    loading_effect(f"Simple comparing {path1} and {path2}"),
+                    simple_compare_result(path1, path2)
+                )
+            }
+            action = compare_map.get(compare_type)
+            if action:
+                action()
             else:
                 handle_error(ErrorContent.MISSING_TYPE_COMMAND, {compare_type}, ErrorReason.INVALID_TYPE), print("Use 'deep' or 'simple'.")
                 return
@@ -268,40 +283,20 @@ def main():
             path1 = sys.argv[3] if len(sys.argv) > 3 else None # Default path
             path2 = sys.argv[4] if len(sys.argv) > 4 else None  # Second path (If have)
 
-            if backup_type == '-backup_file':
-                loading_effect(f"Backing up {path1}")
-                backup_file(path1)
-            elif backup_type == '-backup_restore_file':
-                if not path1 or not path2:
-                    print("\033[91m[!]\033[0m Both backup file path and restore location are required.")
-                    return
-                else:
-                    loading_effect(f"Restoring {path1} to {path2}")
-                    restore_backup(path1, path2)
+            backup_map = {
+                '-backup_file': lambda: (loading_effect(f"Backing up {path1}"), backup_file(path1)) if path1 else handle_error(ErrorContent.MISSING_ARGUMENTS_ERROR, {"path": None}, ErrorReason.MISSING_PATH),
+                '-backup_restore_file': lambda: (loading_effect(f"Restoring {path1} to {path2}"), restore_backup(path1, path2)) if path1 and path2 else (print("\033[91m[!]\033[0m Both backup file path and restore location are required."), None),
+                '-backup_dir': lambda: (loading_effect(f"Backing up {path1}"), backup_directory(path1)) if path1 else handle_error(ErrorContent.MISSING_ARGUMENTS_ERROR, {"path": None}, ErrorReason.MISSING_PATH),
+                '-backup_restore_dir': lambda: (loading_effect(f"Restoring {path1} to {path2}"), restore_directory(path1, path2)) if path1 and path2 else (print("\033[91m[!]\033[0m Both source and target paths are required."), None),
+                '-backup_file_timestamp': lambda: (loading_effect(f"Backing up {path1} with timestamp"), backup_file_with_timestamp(path1)) if path1 else handle_error(ErrorContent.MISSING_ARGUMENTS_ERROR, {"path": None}, ErrorReason.MISSING_PATH),
+                '-backup_multiple_files': lambda: (loading_effect(f"Backing up multiple files: {path1}, {path2}"), backup_multiple_files([path1, path2])) if path1 and path2 else handle_error(ErrorContent.MISSING_ARGUMENTS_ERROR, {"paths": None}, ErrorReason.MISSING_PATH),
+                '-backup_multiple_directory': lambda: (loading_effect(f"Restoring multiple files: {path1}, {path2}"), backup_multiple_files(path1, path2)) if path1 and path2 else handle_error(ErrorContent.MISSING_ARGUMENTS_ERROR, {"paths": None}, ErrorReason.MISSING_PATH),
+                '-clean_old_backups': lambda: (loading_effect("Cleanup old backups older than 30 days..."), clean_old_backups(days=30))
+            }
 
-            elif backup_type == '-backup_dir':
-                loading_effect(f"Backing up {path1}")
-                backup_directory(path1)
-            elif backup_type == '-backup_restore_dir':
-                loading_effect(f"Restoring {path1} to {path2}")
-                restore_directory(path1, path2)
-
-            elif backup_type == '-backup_file_timestamp':
-                loading_effect(f"Backing up {path1} with timestamp")
-                backup_file_with_timestamp(path1)
-
-            elif backup_type == '-backup_multiple_files':
-                loading_effect(f"Backing up multiple files: {path1} and {path2}")
-                backup_multiple_files([path1, path2])
-
-            elif backup_type == '-backup_multiple_directory':
-                loading_effect(f"Restoring multiple files: {path1} and {path2}")
-                backup_multiple_files(path1, path2)
-
-            elif backup_type == '-clean_old_backups':
-                loading_effect(f"Cleanup old backups older than 30 days...")
-                clean_old_backups(days=30)
-
+            action = backup_map.get(backup_type)
+            if action:
+                action()
             else:
                 handle_error(ErrorContent.MISSING_TYPE_COMMAND, {backup_type}, ErrorReason.INVALID_TYPE), print("\nUse 'backup_file', 'backup_dir', 'backup_file_timestamp', 'backup_multiple_files', 'backup_multiple_directory', or 'clean_old_backups'.")
                 return
@@ -319,44 +314,31 @@ def main():
 
         # Monitoring Security
         elif len(sys.argv) >= 2 and sys.argv[1] == '--detective':
-
-            if len(sys.argv) < 4:
-                handle_error(ErrorContent.MISSING_ARGUMENTS_ERROR, ErrorReason.MISSING_ARGUMENTS), print("\nUsage: --detective --type [watcher|activity|security|network|sys_health]", file=sys.stderr)
-                return 
             if len(sys.argv) < 4 or sys.argv[2] != '--type':
-                handle_error(ErrorContent.MISSING_TYPE_COMMAND, {detective_type}, ErrorReason.INVALID_TYPE), print("\nUse 'watcher', 'activity', 'security', 'network', or 'sys_health'.", file=sys.stderr)
+                handle_error(ErrorContent.MISSING_TYPE_COMMAND, {detective_type}, ErrorReason.INVALID_TYPE)
+                print("\nUsage: --detective --type [watcher|activity|security|network|sys_health|process|process_watcher]", file=sys.stderr)
                 return
+            
+            detective_type = sys.argv[3]
+            path = sys.argv[4] if len(sys.argv) >= 5 else None
+
+            detective_map = {
+                'watcher': lambda: watch_detective(path) if path else handle_error(ErrorContent.MISSING_ARGUMENTS_ERROR, {"path": None}, ErrorReason.MISSING_PATH),
+                'activity': activity_detective,
+                'security': monitor_user_activity,
+                'network': network_detective,
+                'system_health': system_health,
+                'process': process_detective,
+                'process_watcher': process_watcher
+            }
+            action = detective_map.get(detective_type)
+            if action:
+                action()
             else:
-                detective_type = sys.argv[3]
-    
-            if detective_type == 'watcher':
-                if len(sys.argv) >= 5:
-                    path = sys.argv[4]
-                    watch_detective(path)
-                else:
-                    handle_error(ErrorContent.MISSING_ARGUMENTS_ERROR, {"path": None}, ErrorReason.MISSING_PATH)
-                    return
-        
-            elif detective_type == 'activity':
-                activity_detective()
+                handle_error(ErrorContent.MISSING_TYPE_COMMAND, {detective_type}, ErrorReason.INVALID_TYPE)
+                print("\nUsage: --detective --type [watcher|activity|security|network|sys_health|process|process_watcher]", file=sys.stderr)
+                return
 
-            elif detective_type == "security":
-                monitor_user_activity()
-
-            elif detective_type == "network":
-                network_detective()
-
-            elif detective_type in ["sys_health", "system_health"]:
-                system_health()
-
-            elif detective_type == "process":
-                process_detective()
-
-            elif detective_type == "process_watcher":
-                process_watcher()
-            else:
-                handle_error(ErrorContent.MISSING_TYPE_COMMAND, {detective_type}, ErrorReason.MISSING_TYPE), print("Use 'watcher', 'activity', 'security', 'network', or 'sys_health'.")
-        
         elif '--sandbox' in sys.argv:
             loading_effect("Loading NNX Sandbox...")
 
@@ -399,4 +381,4 @@ def main():
         
         else:
             handle_error(ErrorContent.UNSUPPORTEDCOMMAND_ERROR, sys.argv[1] if len(sys.argv) > 1 else None, ErrorReason.UNSUPPORTED_COMMAND)
-            print("Run with \033[93mnnx --help\033[0m to see available modules.\n")
+            print("Run with \033[93mnnx --help\033[0m to see available commands.\n")

@@ -2,10 +2,11 @@ import psutil
 import time
 import datetime
 import platform
-import os
+import os, sys
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "utils"))
+from src.utils.getError import handle_error, ErrorContent, ErrorReason
 
 def format_bytes(size):
-    # format bytes thành KB, MB, GB dễ đọc
     for unit in ['B', 'KB', 'MB', 'GB', 'TB']:
         if size < 1024:
             return f"{size:.2f} {unit}"
@@ -13,13 +14,12 @@ def format_bytes(size):
     return f"{size:.2f} PB"
 
 def get_uptime():
-    # uptime tính bằng giây
     boot_time = psutil.boot_time()
     now = time.time()
     uptime_sec = int(now - boot_time)
     return str(datetime.timedelta(seconds=uptime_sec))
 
-def sys_health(detailed=True):
+def show_sys_health():
     print("=== System Health Report ===")
     print(f"Timestamp: {datetime.datetime.now()}")
     print(f"Platform: {platform.system()} {platform.release()} ({platform.version()})")
@@ -43,7 +43,7 @@ def sys_health(detailed=True):
         load1, load5, load15 = os.getloadavg()
         print(f"Load Average (1m,5m,15m): {load1:.2f}, {load5:.2f}, {load15:.2f}")
     except AttributeError:
-        print("Load average not supported on this platform.")
+        handle_error(ErrorContent.LOAD_AVERAGE, {}, ErrorReason.NOT_SUPPORTED)
 
     # Memory
     print("\n--- Memory ---")
@@ -99,6 +99,7 @@ def sys_health(detailed=True):
             print("No temperature sensors found.")
     else:
         print("Temperature sensor not supported on this platform.")
+        handle_error(ErrorContent.TEMPERATURE_SENSOR, {}, ErrorReason.NOT_SUPPORTED)
 
     # Network
     print("\n--- Network Interfaces ---")
@@ -134,6 +135,7 @@ def sys_health(detailed=True):
     print(f"  Drop In: {net_io.dropin}")
     print(f"  Drop Out: {net_io.dropout}")
 
+    # Process summary
     print("\n--- System Processes ---")
     total_procs = len(psutil.pids())
     running_procs = len([p for p in psutil.process_iter(['status']) if p.info['status'] == psutil.STATUS_RUNNING])
@@ -141,7 +143,7 @@ def sys_health(detailed=True):
     print(f"Running processes: {running_procs}")
     print()
 
-def proc_watch(top_n=5):
+def show_proc_watch(top_n=5):
     print(f"=== Top {top_n} Processes by CPU Usage ===")
     procs = []
     for p in psutil.process_iter(['pid', 'name', 'cpu_percent', 'memory_percent']):
@@ -149,31 +151,7 @@ def proc_watch(top_n=5):
             procs.append((p.info['cpu_percent'], p.info['memory_percent'], p.info['name'], p.info['pid']))
         except (psutil.NoSuchProcess, psutil.AccessDenied):
             continue
-    procs.sort(reverse=True, key=lambda x: x[0])  # sort by cpu_percent descending
+    procs.sort(reverse=True, key=lambda x: x[0])
     for cpu, mem, name, pid in procs[:top_n]:
         print(f"PID {pid} - {name}: CPU {cpu:.2f}% | Memory {mem:.2f}%")
     print()
-
-def sys_health():
-    while True:
-        print("Choose command:")
-        print("1. sys_health")
-        print("2. proc_watch")
-        print("0. Exit")
-        cmd = input("Enter choice: ").strip()
-
-        if cmd == '1':
-            sys_health()
-        elif cmd == '2':
-            try:
-                top_n = int(input("How many top processes to show? (default 5): ") or "5")
-            except:
-                top_n = 5
-            proc_watch(top_n)
-        elif cmd == '0':
-            break
-        else:
-            print("Invalid command. Try again.\n")
-
-if __name__ == "__main__":
-    sys_health()

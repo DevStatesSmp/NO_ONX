@@ -13,7 +13,8 @@ try:
         """
         if FEATURE.get("DISABLE_LOADING", False):
             return     
-        spinner = ['|', '/', '—', '\\']
+        spinner = ['◜', '◝', '◞', '◟', '◡', '◠', '◜', '◝', '◞']
+
         start_time = time.time()
         
         try:

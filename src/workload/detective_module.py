@@ -11,7 +11,7 @@ from src.utils.getError import handle_error, ErrorContent, ErrorReason
 from .monitoring.activity_detective import monitor_user_activity
 from .monitoring.security_detective import check_privilege_escalation
 from .monitoring.network_detective import networker_detective, is_admin
-from .monitoring.sys_health import sys_health
+from .monitoring.sys_health import show_sys_health, show_proc_watch
 
 def get_bin_dir():
     base_dir = os.path.dirname(os.path.abspath(__file__))
@@ -169,4 +169,24 @@ def network_detective():
     networker_detective()
 
 def system_health():
-    sys_health()
+    while True:
+        print("Choose command:")
+        print("1. System Health Report")
+        print("2. Process Watch")
+        print("0. Exit")
+        cmd = input("Enter choice: ").strip()
+
+        if cmd == '1':
+            show_sys_health()
+        elif cmd == '2':
+            try:
+                top_n = int(input("How many top processes to show? (default 5): ") or "5")
+            except:
+                top_n = 5
+            show_proc_watch(top_n)
+        elif cmd == '0':
+            print("Exiting...")
+            break
+        else:
+            print("Invalid command. Try again.\n")
+            handle_error(ErrorContent.WHEN_RUNNING_ERROR, cmd, ErrorReason.INVALID_TYPE)

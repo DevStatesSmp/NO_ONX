@@ -84,7 +84,3 @@ def check_privilege_escalation():
     except Exception as e:
         logging.error(Fore.RED + f'Error closing event log: {e}')
         handle_error(ErrorContent.EVENT_LOG, {'server': server, 'log_type': log_type}, ErrorReason.UNKNOWN_ERROR)
-
-
-if __name__ == "__main__":
-    check_privilege_escalation()

@@ -167,7 +167,3 @@ def monitor_user_activity():
             )
 
     check_user_info()
-
-
-if __name__ == "__main__":
-    monitor_user_activity()

@@ -10,6 +10,7 @@ from src.config.NNX_PROMPT import get_prompt
 from src.config.NNX_COMMAND import NOONX_COMMANDS, INTERNAL_COMMANDS
 from src.utils.getError import *
 from src.workload.nnx_private import run_private_shell
+os.system(F"title NNX {SETTINGS.get('NNX_VERSION', 'unknown')} Shell")
 
 if getattr(sys, 'frozen', False):
     app_path = sys._MEIPASS
