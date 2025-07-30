@@ -37,7 +37,7 @@
 ---
 
 # Supported Versions
-> **Last Updated:** May 22, 2025 (v0.3.1 beta)<br>
+> **Last Updated:** July 29, 2025 (v0.3.3 beta)<br>
 
 ## ✅ Currently Supported Version
 | Version         | Release Date       | Support Status     | Notes                                                      |
