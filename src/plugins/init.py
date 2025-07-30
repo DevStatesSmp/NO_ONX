@@ -6,8 +6,9 @@ import json
 from src.utils.loading_effect import loading_effect
 from src.utils.getError import *
 from src.plugins.plugins_manager import list_plugins_with_id
+from src.config.PATH import PLUGIN_DIR as plugin_dir
 
-plugin_dir = os.path.join(os.path.dirname(__file__), "..", "plugins")
+# plugin_dir = os.path.join(os.path.dirname(__file__), "..", "plugins")
 
 loaded_plugins = {}
 loaded_successfully = []
