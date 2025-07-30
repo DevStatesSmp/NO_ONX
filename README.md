@@ -1,5 +1,5 @@
 # NO_ONX
-**NO_ONX** is a lightweight yet powerful toolkit designed for **analysis**, **investigation**, and **security monitoring** on Windows systems. 
+**NO_ONX** is a lightweight tool but useful to analysis, investigattion, security monitoring for Window 
 <p align="center">
   <a href="https://github.com/DevStatesSmp/NO_ONX-old">
     <img src="https://github.com/user-attachments/assets/dd3b4b8d-ec74-429b-a629-2c1b1f3d6aac" width="200" alt="NO_ONX Logo" title="NO_ONX - Lightweight Security Tool" />
