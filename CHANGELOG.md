@@ -10,7 +10,7 @@
 ---
 ## [v0.3.3 Beta] - 2025-07-29
 ### Added
-NNX CLI Command (Unstable and still testing)
+NNX CLI Command
 
 ### Fixed
 - Optimize code and improve stability
