@@ -1,5 +1,6 @@
 # Changelog
-> :window: Since **v0.2.4 Beta**, NO_ONX officially supports **Windows only**. Linux support has been **discontinued**.
+> 1. :window: Since **v0.2.4 Beta**, NO_ONX officially supports **Windows only**. Linux support has been **discontinued**.
+> 2. v0.3.4 Beta is the final release version, I have to pause this project due to the appearance of many bugs as well as its loss of direction
 > 
 <p align="center">
   <a href="https://github.com/DevStatesSmp/NO_ONX-old">
@@ -8,6 +9,18 @@
 </p>
 
 ---
+## [v0.3.4 Beta] - 2025-08-02
+### Added
+- Clear python cache
+- Command suggestion "Do you mean...?"
+
+## Changed
+- Config Setting, Feature more easily without direct intervention required to edit files
+- New help command
+
+## Fixed
+Fix some bug 
+
 ## [v0.3.3 Beta] - 2025-07-29
 ### Added
 NNX CLI Command
