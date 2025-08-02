@@ -1,6 +1,7 @@
 # THIS IS MODULE, DO NOT RUN THIS FILE DIRECTLY
 
 import sys
+from difflib import get_close_matches
 
 # Import source
 # Plugins
@@ -12,8 +13,13 @@ from .utils.system_info_module import get_system_info
 from .utils.banner_module import banner, version
 from .utils.loading_effect import loading_effect
 from .utils.getError import handle_error, ErrorContent, ErrorReason
-# Workload
+from .utils.clear_line import clear_line
+from .utils.clear_cache import clear_cache
+# Config
 from .config.CONFIG import FEATURE
+from .config.NNX_COMMAND import SUPPORTED_COMMANDS
+from .config.CONFIG_TOGGLE import CONFIG_TOGGLE
+# Workload
 from .workload.compare_module import deep_compare_dirs, simple_compare_dirs
 from .workload.modification_module import mod
 from .workload import file_scan_module
@@ -38,13 +44,13 @@ def main():
             
             load_plugins()
 
+            # Plugin list
             if arg in ("--plugin_list", "-list"):
                 plugins = list_plugins()
-
+            # run plugin
             elif arg in ("--plugin", "-p"):
                 if len(sys.argv) < 3:
-                    print("Please specify plugin name")
-                    print("Usage: --plugin <plugin_name> [args...]")
+                    print("[INFO] Usage: --plugin <plugin_name> [args...]")
                     return
                 plugin_name = sys.argv[2]
                 plugin_args = sys.argv[3:]
@@ -55,6 +61,7 @@ def main():
                     return
                 
                 if hasattr(plugin, 'execute'):
+                    # Ask user to use plugin
                     if ask_use_plugin(plugin_name):
                         plugin.execute(plugin_args)
                     else:
@@ -90,6 +97,7 @@ def main():
             'modify': help_modify,
             'fileinfo': help_fileinfo,
             'sandbox': help_sandbox,
+            'feature': help_feature,
             }
             if sub_arg and sub_arg in help_map:
                 help_map[sub_arg]()
@@ -105,6 +113,12 @@ def main():
                 banner()
             version()
 
+        elif arg in ('--clear_cache', '-cc'):
+            clear_cache()
+
+        elif arg in ('--config'):
+            CONFIG_TOGGLE()
+
         ## Class info
         elif arg == '--file_info' and len(sys.argv) >= 3:
             info.file_info(sys.argv[2])
@@ -113,6 +127,7 @@ def main():
             path = sys.argv[2]
             algo = sys.argv[3] if len(sys.argv) >= 4 else "sha256"
             loading_effect(f"Generating hash for {path} using {algo.upper()}")
+            clear_line()
             info.file_hash(path, algo)
 
         elif arg == '--dir_info' and len(sys.argv) >= 3:
@@ -161,9 +176,11 @@ def main():
 
         # Modification
         elif arg == '--modify_file_permission' and len(sys.argv) >= 4:
+            # Modify file permission
             path = sys.argv[2]
             permission = sys.argv[3]
             loading_effect(f"Modifying file permissions for {path}")
+            clear_line()
             mod.modify.modify_file_permission(path, permission)
 
         elif arg == '--modify_file_content' and len(sys.argv) >= 5:
@@ -173,10 +190,12 @@ def main():
                 target_text = sys.argv[4]
                 text = sys.argv[5] if operation == 'replace' and len(sys.argv) >= 6 else None
                 loading_effect(f"Modifying content in file {path}")
+                clear_line()
                 mod.modify.modify_file_content(path, operation, text, target_text)
             elif operation == 'append':
                 text = sys.argv[4]
                 loading_effect(f"Appending text to file {path}")
+                clear_line()
                 mod.modify.modify_file_content(path, operation, text)
 
         elif arg == '--modify_file_name' and len(sys.argv) >= 4:
@@ -189,6 +208,7 @@ def main():
             metadata_type = sys.argv[3]
             value = float(sys.argv[4])
             loading_effect(f"Modifying file metadata for {path}")
+            clear_line()
             mod.modify.modify_file_metadata(path, metadata_type, value)
 
         elif arg == '--modify_file_line' and len(sys.argv) >= 5:
@@ -209,18 +229,21 @@ def main():
             operation = sys.argv[3]
             new_path = sys.argv[4]
             loading_effect(f"Modifying directory {path}")
+            clear_line()
             mod.modify.modify_directory(path, operation, new_path)
 
         elif arg == '--modify_directory_permissions' and len(sys.argv) >= 4:
             path = sys.argv[2]
             permission = sys.argv[3]
             loading_effect(f"Modifying directory permissions for {path}")
+            clear_line()
             mod.modify.modify_directory_permissions(path, permission)
 
         elif arg == '--modify_file_owner' and len(sys.argv) >= 4:
             path = sys.argv[2]
             new_owner = int(sys.argv[3])
             loading_effect(f"Modifying file owner for {path}")
+            clear_line()
             mod.modify.modify_file_owner(path, new_owner)
 
         # File Scan
@@ -228,6 +251,7 @@ def main():
             path = sys.argv[2]
             algo = sys.argv[3] if len(sys.argv) >= 4 else "sha256"
             loading_effect(f"Scanning directory ({path}) using {algo.upper()}")
+            clear_line()
             file_scan_module.reset_results()
             file_scan_module.scan_directory(path, algo)
             file_scan_module.print_results()
@@ -304,6 +328,7 @@ def main():
         elif arg == '--file_list' and len(sys.argv) >= 3:
             path = sys.argv[2]
             loading_effect(f"Loading file list for {path}")
+            clear_line()
             file_list_data = file_list.get_path(path)
 
             if file_list_data:
@@ -340,7 +365,10 @@ def main():
                 return
 
         elif '--sandbox' in sys.argv:
+            # Check terminal if was NNX Private
+
             loading_effect("Loading NNX Sandbox...")
+            clear_line()
 
             def get_arg_value(flag):
                 try:
@@ -378,7 +406,11 @@ def main():
                     print(result['stderr'], file=sys.stderr)
             else:
                 print("No result returned from sandbox execution.")
+
+        # Scanning Tools
         
         else:
-            handle_error(ErrorContent.UNSUPPORTEDCOMMAND_ERROR, sys.argv[1] if len(sys.argv) > 1 else None, ErrorReason.UNSUPPORTED_COMMAND)
-            print("Run with \033[93mnnx --help\033[0m to see available commands.\n")
+            suggestions = get_close_matches(sys.argv[1], SUPPORTED_COMMANDS, n=1, cutoff=0.6)
+            if suggestions:
+                print(f"Did you mean: \033[96m{suggestions[0]}\033[0m?\n")
+            print("[TIPS]Run with \033[93mnnx --help\033[0m to see available commands.")

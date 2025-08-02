@@ -1,6 +1,7 @@
 import json
 import os
 import sys
+from src.config.PATH import settings_path, feature_path
 
 SETTINGS = {}
 FEATURE = {}
@@ -8,7 +9,7 @@ FEATURE = {}
 
 def load_settings():
     global SETTINGS
-    settings_path = os.path.join(os.path.dirname(__file__), 'SETTING.json')
+    # settings_path = os.path.join(os.path.dirname(__file__), 'SETTING.json')
     try:
         with open(settings_path, 'r', encoding='utf-8') as f:
             SETTINGS = json.load(f)
@@ -20,7 +21,7 @@ def load_settings():
 
 def load_feature():
     global FEATURE
-    feature_path = os.path.join(os.path.dirname(__file__), 'FEATURE.json')
+    # feature_path = os.path.join(os.path.dirname(__file__), 'FEATURE.json')
     try:
         with open(feature_path, 'r', encoding='utf-8') as f:
             FEATURE = json.load(f)

@@ -3,7 +3,7 @@ from src.config.CONFIG import FEATURE
 from .getError import *
 
 try:
-    def loading_effect(text="Loading modules", delay=0.175, duration=3):
+    def loading_effect(text="Loading modules", delay=0.175, duration=2):
         """
         Displays a loading effect in the terminal.
         Args:

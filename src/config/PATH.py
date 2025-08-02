@@ -13,3 +13,10 @@ else:
 
 # Path
 PLUGIN_DIR = os.path.join(BASE_DIR, 'src', 'plugins')
+settings_path = os.path.join(BASE_DIR, 'src', 'config', 'SETTING.json')
+feature_path = os.path.join(BASE_DIR, 'src', 'config', 'FEATURE.json')
+CONFIG_PATH = os.path.join(BASE_DIR, 'src', 'config', 'CONFIG.json')
+CACHE_DIRS = ['__pycache__']
+CACHE_EXTS = ['.pyc', '.pyo']
+PLUGIN_FOLDER = os.path.join(BASE_DIR)
+DOWNLOAD_FOLDER = PLUGIN_FOLDER

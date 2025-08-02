@@ -4,9 +4,10 @@ import requests
 import subprocess
 from src.utils.getError import handle_error, ErrorContent, ErrorReason
 from src.utils.loading_effect import loading_effect
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-PLUGIN_FOLDER = os.path.join(BASE_DIR)
-DOWNLOAD_FOLDER = PLUGIN_FOLDER
+from src.config.PATH import PLUGIN_FOLDER, DOWNLOAD_FOLDER
+# BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# PLUGIN_FOLDER = os.path.join(BASE_DIR)
+# DOWNLOAD_FOLDER = PLUGIN_FOLDER
 
 try:
     import rarfile

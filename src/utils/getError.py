@@ -85,6 +85,7 @@ class ErrorReason:
     CANNOT_DELETE_SYMLINK = "Cannot delete symlink."
     CANNOT_READ_FILE = "Cannot read file."
     CANNOT_WRITE_FILE = "Cannot write file."
+    CANNOT_SCAN_FILE = "Cannot scan file."
 
     # Not reason
     NOT_FILE = "The specified path is not a file."
