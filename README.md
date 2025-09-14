@@ -32,7 +32,7 @@
 
 # Requirements
 
-- **Operating System**: Windows 7+
+- **Operating System**: Windows 10+
 - **Python Version**: 3.1x
 
 ---
